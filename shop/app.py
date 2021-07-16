@@ -5,7 +5,7 @@ import sqlalchemy
 from sqlalchemy.sql.functions import user
 from sqlalchemy.inspection import inspect
 from werkzeug.security import generate_password_hash, check_password_hash # hides password
-from .models import User
+from .models import User,Product,Cart
 from . import db
 
 
