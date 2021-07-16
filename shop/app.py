@@ -16,6 +16,8 @@ app = Blueprint('app', __name__)
 
 @app.route('/', methods=['GET', 'POST'])
 def index():
+    # flash('Error Message', category='error')
+    # flash('Success Message', category='success')
    
     # user = User.query.filter_by(EmailAddress=current_user.EmailAddress).first()
    
