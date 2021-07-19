@@ -8,6 +8,7 @@ from sqlalchemy.sql.functions import user
 from sqlalchemy.inspection import inspect
 from werkzeug.security import generate_password_hash, check_password_hash # hides password
 from .models import User,Product,Cart, Img
+from datetime import datetime
 from .queries import *
 from . import db
 
@@ -38,7 +39,7 @@ def index():
     #     userType = 'user'
     # elif admin:
     #     userType = 'admin'
-    return render_template('home.html', user=current_user, productsDict=productResult)
+    return render_template('home.html', user=current_user, productsDict=productResult, now=datetime.utcnow())
     # return render_template('home.html', user=current_user)
 
 

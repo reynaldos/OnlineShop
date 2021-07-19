@@ -46,7 +46,7 @@ class Product(db.Model):
     Name = db.Column(db.String(50), nullable=False)
     Description = db.Column(db.String(500))
     Price = db.Column(db.Float, nullable=False)
-    ImgURL = db.Column(db.String(500))
+    # ImgURL = db.Column(db.String(500))
     DateAdded = db.Column(db.DateTime(timezone=True), default=func.now())
     isSold = db.Column(db.Boolean, default=False)
     Carts = db.relationship('Cart', secondary=cartIdentifier) # many-to-many relation
