@@ -2,10 +2,12 @@ from os import remove
 from flask import Flask, render_template, request, send_from_directory, url_for, redirect, flash, session, Blueprint
 from flask_login import login_user, login_required, logout_user, current_user
 import sqlalchemy
+from sqlalchemy.orm import query
 from sqlalchemy.sql.functions import user
 from sqlalchemy.inspection import inspect
 from werkzeug.security import generate_password_hash, check_password_hash # hides password
 from .models import User,Product,Cart
+from .queries import *
 from . import db
 
 
@@ -16,17 +18,25 @@ app = Blueprint('app', __name__)
 
 @app.route('/', methods=['GET', 'POST'])
 def index():
-    # flash('Error Message', category='error')
-    # flash('Success Message', category='success')
-   
-    # user = User.query.filter_by(EmailAddress=current_user.EmailAddress).first()
-   
+    
+    # list of prodcuts 
+    productResult = sortProductBy()
+
+    # if search bar triggered
+    # if len(productResult) < 1:
+    #     flash('Nothing found for that search. (All words must match.)', category='warning')
+
+    # default items list
+    if len(productResult) < 1:
+        flash('No items posted yet.', category='warning')
+
+
     # have correct things show depending on user
     # if user:
     #     userType = 'user'
     # elif admin:
     #     userType = 'admin'
-    return render_template('home.html', user=current_user)
+    return render_template('home.html', user=current_user, productsDict=productResult)
     # return render_template('home.html', user=current_user)
 
 
@@ -143,11 +153,18 @@ def itemPost():
     return render_template('itemPost.html',user=current_user)
 
 
-@app.route('/cart')
+@app.route('/cart', methods=['GET','POST'])
 @login_required
 def shoppingCart():
+    cartItems = getItemsFromCart(current_user.UserId)
 
-    return render_template('itemPost.html',user=current_user)
+    # upon form completion
+    if request.method == 'POST':
+        pass
+
+
+
+    return render_template('cart.html',user=current_user, productsDict = cartItems)
 
 
 

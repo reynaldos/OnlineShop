@@ -44,6 +44,7 @@ class Product(db.Model):
     ImgURL = db.Column(db.String(500))
     DateAdded = db.Column(db.DateTime(timezone=True), default=func.now())
     isSold = db.Column(db.Boolean, default=False)
+    Carts = db.relationship('Cart',) # many-to-many relation
 
      # uses userId for getting ID
     def get_id(self):
