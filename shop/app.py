@@ -153,18 +153,30 @@ def itemPost():
     return render_template('itemPost.html',user=current_user)
 
 
+# have log required to view cart once registration/log in functionality complete
 @app.route('/cart', methods=['GET','POST'])
-@login_required
+# @login_required
 def shoppingCart():
-    cartItems = getItemsFromCart(current_user.UserId)
+    # uncoment upon registration completion
+    # cartItems = getItemsFromCart(current_user.UserId)
+    cartItems = list()
+
+    checkOutSum = 0
+    for product in cartItems:
+        checkOutSum += product[5]
 
     # upon form completion
     if request.method == 'POST':
-        pass
+        for product in cartItems:
+            db.session.delete(product)
+            db.session.commit()
+
+        flash('Check Out Success! Shipping information sent to email!', category='success')
+        return redirect(url_for('app.index')) 
 
 
 
-    return render_template('cart.html',user=current_user, productsDict = cartItems)
+    return render_template('cart.html',user=current_user, productsDict = cartItems, checkOutSum=checkOutSum)
 
 
 

@@ -4,11 +4,11 @@ from sqlalchemy.orm import session
 from sqlalchemy import text
 
 
-
 from .models import User,Product,Cart
 from . import db
 
 query = Blueprint('query', __name__)
+
 
 # reads in queries
 def read(data):
@@ -35,6 +35,7 @@ def getUserIds():
         data = connection.execute("SELECT UserId FROM User").fetchall()
         result = read(data)
         return result
+
 
 def userActiveProducts(userId):
     """returns all products a user has posted"""
