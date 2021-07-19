@@ -26,7 +26,7 @@ def index():
     #     userType = 'user'
     # elif admin:
     #     userType = 'admin'
-    return render_template('home.html')
+    return render_template('home.html', user=current_user)
     # return render_template('home.html', user=current_user)
 
 
@@ -139,6 +139,13 @@ def admin():
 @app.route('/itemPost')
 @login_required
 def itemPost():
+
+    return render_template('itemPost.html',user=current_user)
+
+
+@app.route('/cart')
+@login_required
+def shoppingCart():
 
     return render_template('itemPost.html',user=current_user)
 
