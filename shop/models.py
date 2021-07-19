@@ -25,10 +25,15 @@ class User(db.Model, UserMixin):
         return self.UserId
 
 
+cartIdentifier = db.Table('cartIdentifier',
+    db.Column('PID', db.Integer, db.ForeignKey('product.PID')),
+    db.Column('CID', db.Integer, db.ForeignKey('cart.CID'))
+)
+
+
 class Cart(db.Model):
     CID = db.Column(db.Integer, primary_key=True) 
     UserId = db.Column(db.Integer, db.ForeignKey('user.UserId'))
-    Products = db.relationship('Product') # one-to-many relation
 
      # uses cid for getting ID
     def get_id(self):
@@ -44,8 +49,16 @@ class Product(db.Model):
     ImgURL = db.Column(db.String(500))
     DateAdded = db.Column(db.DateTime(timezone=True), default=func.now())
     isSold = db.Column(db.Boolean, default=False)
-    Carts = db.relationship('Cart',) # many-to-many relation
+    Carts = db.relationship('Cart', secondary=cartIdentifier) # many-to-many relation
+    Images = db.relationship('Img') # one-to-many relation
 
      # uses userId for getting ID
     def get_id(self):
         return self.PID
+
+class Img(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    ProductId = db.Column(db.Integer, db.ForeignKey('product.PID'))
+    img = db.Column(db.Text, unique=True, nullable=False)
+    name = db.Column(db.Text, nullable=False)
+    mimetype = db.Column(db.Text, nullable=False)

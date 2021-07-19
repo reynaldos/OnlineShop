@@ -3,10 +3,11 @@ from flask import Flask, render_template, request, send_from_directory, url_for,
 from flask_login import login_user, login_required, logout_user, current_user
 import sqlalchemy
 from sqlalchemy.orm import query
+from sqlalchemy.sql.expression import null
 from sqlalchemy.sql.functions import user
 from sqlalchemy.inspection import inspect
 from werkzeug.security import generate_password_hash, check_password_hash # hides password
-from .models import User,Product,Cart
+from .models import User,Product,Cart, Img
 from .queries import *
 from . import db
 
@@ -18,6 +19,7 @@ app = Blueprint('app', __name__)
 
 @app.route('/', methods=['GET', 'POST'])
 def index():
+    
     
     # list of prodcuts 
     productResult = sortProductBy()
@@ -45,7 +47,6 @@ def login():
     if request.method == 'POST':
         email = request.form.get('EmailAddress')
         password = request.form.get('Password')
-        remember  = request.form.get('remember')
 
         # looks for user in DB
         user = User.query.filter_by(EmailAddress=email).first()
@@ -57,7 +58,7 @@ def login():
         if user:
             if check_password_hash(user.Password, password):
                  flash('You have been successfully logged in.', category='succes')
-                 login_user(user, remember=remember)
+                 login_user(user)
                  return redirect(url_for('app.index', user=current_user))
             else:
                  flash('Wrong password. Please try again.', category='error')

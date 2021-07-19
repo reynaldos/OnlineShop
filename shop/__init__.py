@@ -44,3 +44,24 @@ def create_database(app):
         db.create_all(app=app)
         print('DB Created')
 
+
+def addProducts():
+    from .models import Product,Img
+    exampleProducts = list()
+
+    for i in range(20):
+        newProduct = Product(
+            SellerID = 2,
+            Name = f"Eaxmple {i}",
+            Description = "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.",
+            Price = 34.99)
+
+        db.session.add(newProduct)
+
+        newImage = Img(
+                ProductId = newProduct.PID,
+                img= '/static/logo.png',
+                name= "examplet.png",
+                mimetype="image/png")
+        db.session.add(newImage)
+        db.session.commit()
