@@ -48,11 +48,11 @@ def index(search='',sortby='newest'):
 @app.route('/login', methods=['GET','POST'])
 def login():
     if request.method == 'POST':
-        email = request.form.get('EmailAddress')
-        password = request.form.get('Password')
+        Email_address = request.form.get('email_address')
+        password = request.form.get('password')
 
         # looks for user in DB
-        user = User.query.filter_by(EmailAddress=email).first()
+        user = User.query.filter_by(Email=Email_address).first()
 
         # if user found checks password
         # if wrong password throw error
@@ -60,13 +60,14 @@ def login():
     
         if user:
             if check_password_hash(user.Password, password):
-                 flash('You have been successfully logged in.', category='succes')
+                 flash('You have been successfully logged in.', category='success')
                  login_user(user)
                  return redirect(url_for('app.index', user=current_user))
             else:
                  flash('Wrong password. Please try again.', category='error')
         else:
             flash('Email does not exist.  Please try again.', category='error')
+
 
     return render_template('login.html', user=current_user)
 
@@ -76,38 +77,38 @@ def registration():
     if request.method == 'POST':
         userType = request.form.get('type')
         
-        fname = request.form.get('FirstName')
-        midIn = request.form.get('MiddleInitial')
-        lname = request.form.get('LastName')
+        fname = request.form.get('first_name')
+        midIn = request.form.get('middle_initial')
+        lname = request.form.get('last_name')
 
-        address = request.form.get('Address')
-        city = request.form.get('City')
-        state = request.form.get('State')
-        zip = request.form.get('Zip')
+        address = request.form.get('address')
+        city = request.form.get('city')
+        state = request.form.get('state')
+        zip = request.form.get('zipcode')
 
-        email = request.form.get('EmailAddress')
-        phone = request.form.get('PhoneNumber')
-        password = request.form.get('Password')
+        email = request.form.get('email')
+        phone = request.form.get('phone_number')
+        password = request.form.get('password')
 
-
-        user = User.query.filter_by(EmailAddress=email).first()
+        user = User.query.filter_by(Email=email).first()
        
         if user:
             flash("Email already exits. Try again.", category='error')
+            return redirect('base.html')
         elif len(email) < 5:
             flash('Email must be greater than 5 characters.', category='error')
         elif len(password) != 5:
            flash('Password must be 5 characters.', category='error')
         else:
             newUser = User(
-                FirstName = fname,
-                MiddleInitial = midIn,
-                LastName = lname,
+                Fname = fname,
+                MiddleIn = midIn,
+                Lname = lname,
                 Address = address,
                 City = city,
                 State = state,
                 ZipCode = zip,
-                EmailAddress = email,
+                Email = email,
                 PhoneNumber = phone,
                 Password = generate_password_hash(password, method='sha256'))
      
@@ -119,6 +120,7 @@ def registration():
 
             return redirect(url_for('app.index'))
             
+
     return render_template('registration.html', user=current_user)
 
 
@@ -134,7 +136,7 @@ def accountSettings():
 @login_required 
 def logOut():
     logout_user()
-    return redirect(url_for('app.LoginForm'))
+    return redirect(url_for('app.login'))
 
 
 @app.route('/itemPost', methods=['GET','POST'])
