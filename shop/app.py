@@ -1,7 +1,6 @@
 from os import remove
-from flask import Flask, render_template, request, send_from_directory, url_for, redirect, flash, session, Blueprint
+from flask import Flask, render_template, request, send_from_directory, url_for, redirect, flash, Blueprint
 from flask_login import login_user, login_required, logout_user, current_user
-import sqlalchemy
 from sqlalchemy.orm import query
 from sqlalchemy.sql.expression import null
 from sqlalchemy.sql.functions import user
@@ -17,13 +16,21 @@ from . import db
 # @login_required -> cant access page unless user logged in
 
 app = Blueprint('app', __name__)
-
-@app.route('/', methods=['GET', 'POST'])
-def index():
-    
+@app.route('/')
+@app.route('/<string:sortby>', methods=['GET', 'POST'])
+def index(sortby='newest'):
     
     # list of prodcuts 
-    productResult = sortProductBy()
+    productResult = list()
+    if sortby == "newest":
+        productResult = sortProductBy('DateAdded', "DESC")
+    elif sortby == "priceDesc":
+        productResult = sortProductBy('Price', "DESC")
+    elif sortby == "priceAsc":
+        productResult = sortProductBy('Price', "ASC")
+    else:
+        return 
+
 
     # if search bar triggered
     # if len(productResult) < 1:
@@ -34,13 +41,8 @@ def index():
         flash('No items posted yet.', category='warning')
 
 
-    # have correct things show depending on user
-    # if user:
-    #     userType = 'user'
-    # elif admin:
-    #     userType = 'admin'
-    return render_template('home.html', user=current_user, productsDict=productResult, now=datetime.utcnow())
-    # return render_template('home.html', user=current_user)
+    return render_template('home.html', user=current_user, productsDict=productResult, now=datetime.utcnow(), sortby=sortby)
+
 
 
 @app.route('/login', methods=['GET','POST'])

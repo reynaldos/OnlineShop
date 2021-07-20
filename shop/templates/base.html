@@ -25,7 +25,7 @@
     <nav class="navbar navbar-expand-md navbar-dark bg-dark">
       <div class="container-fluid">
         <!-- home tab always viewed -->
-        <a class="navbar-brand" href="{{ url_for('app.index') }}">
+        <a class="navbar-brand" href="{{url_for('app.index', sortby='newest')}}">
           <img src="{{url_for('static', filename='logo.png')}}" alt="logo" width="40" , hieght="40">
         </a>
         <button
