@@ -16,10 +16,14 @@
       href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css"
       crossorigin="anonymous"
     />
+    
+    <!--===============================================================================================-->
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/util.css') }}">
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/main.css') }}">
   
     <title>{% block title %}Home{% endblock %}</title>
   </head>
-  <body>
+  <body style='background-color: #f2f2f2'>
 
     <!-- navbar -->
     <nav class="navbar navbar-expand-md navbar-dark bg-dark">
@@ -48,11 +52,11 @@
             {% endif %}
           {% else %}
           <!-- login/sign up tabs only shown if user not logged in-->
-          <a class="nav-item nav-link" id="login" href="/login">Login</a>
-          <a class="nav-item nav-link" id="signUp" href="/registration">Sign Up</a>
+          <a class="navbar-sub" id="login" href="/login">Login</a>
+          <a class="navbar-sub" id="signUp" href="/registration">Sign Up</a>
           {% endif %}
           <!-- cart tab always viewed -->
-          <a class="nav-item nav-link" id="logout" href="{{ url_for('app.shoppingCart') }}">Cart</a>
+          <a class="navbar-sub" id="logout" href="{{ url_for('app.shoppingCart') }}">Cart</a>
         </div>
         </div>
       </div>
@@ -94,6 +98,8 @@
 
   <!-- bootstrap form validation -->
   <script src="{{url_for('static', filename='form-validation.js')}}"></script>
+    
+    <script language="javascript" src="static/scripts/FOOTER.js"></script>
   <!-- bootstrap scripts -->
   <script
   src="https://code.jquery.com/jquery-3.2.1.slim.min.js"
