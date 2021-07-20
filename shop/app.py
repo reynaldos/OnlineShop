@@ -6,6 +6,7 @@ from sqlalchemy.sql.expression import null
 from sqlalchemy.sql.functions import user
 from sqlalchemy.inspection import inspect
 from werkzeug.security import generate_password_hash, check_password_hash # hides password
+from werkzeug.utils import secure_filename
 from .models import User,Product,Cart, Img
 from datetime import datetime
 from .queries import *
@@ -21,6 +22,7 @@ app = Blueprint('app', __name__)
 @app.route('/<string:sortby>/<string:search>', methods=['GET', 'POST'])
 def index(search='',sortby='newest'):
     
+    # fix bug
     if request.method == 'POST':
         search = request.form.get('search')
        
@@ -39,11 +41,6 @@ def index(search='',sortby='newest'):
     # if search bar triggered
     if len(productResult) < 1 and search:
         flash('Nothing found for that search. (All words must match.)', category='warning')
-
-    # default items list
-    # if len(productResult) < 1:
-    #     flash('No items posted yet.', category='warning')
-
 
     return render_template('home.html', user=current_user, productsDict=productResult, now=datetime.utcnow(), sortby=sortby, search=search)
 
@@ -154,11 +151,71 @@ def admin():
     return render_template('Management.html',user=current_user)
 
 
-@app.route('/itemPost')
-@login_required
+@app.route('/itemPost', methods=['GET','POST'])
+# @login_required
 def itemPost():
+    if request.method == 'POST':
+        # product info from form
+        pName = request.form.get('ProductName')
+        pDesc = request.form.get('ProductDescription')
+        pPrice = request.form.get('ProductPrice')
+
+        # image info from form
+        pPic = request.files['uploadImg']
+        filename = secure_filename(pPic.filename)
+        mimetype = pPic.mimetype
+    
+        if not pPic:
+          flash('Image required to submit item.', category='error')
+        else:
+            newProduct = Product(
+                SellerID = current_user.UserId,
+                Name = pName,
+                Description = pDesc,
+                Price = pPrice)
+
+             # to database
+            db.session.add(newProduct)
+            db.session.commit()
+
+            img = Img(
+                ProductId=newProduct.PID,
+                img=pPic.read(), 
+                name=filename, 
+                mimetype=mimetype)
+            
+            # to database
+            db.session.add(img)
+            db.session.commit()
+
+            flash('Item Post!', category='success')
+            return redirect(url_for('app.index'))
 
     return render_template('itemPost.html',user=current_user)
+
+
+# have log required to view cart once registration/log in functionality complete
+# @app.route('/itemPost', methods=['GET','POST'])
+# #@login_required
+# def productForm():
+#     # uncoment upon registration completion
+#     # cartItems = getItemsFromCart(current_user.UserId)
+#     productItems = list()
+
+#     numberOfProducts = 0
+#     for product in productItems:
+#         numberOfProducts += product[5]
+
+#     # upon form completion
+#     if request.method == 'POST':
+#         for product in productItems:
+#             # db.session.delete(product)
+#             db.session.commit()
+
+#         flash('Your request has been recieved', category='success')
+#         return redirect(url_for('app.index')) 
+
+#     return render_template('itemPost.html',user=current_user, productsDict = productItems, numberOfProducts=numberOfProducts)
 
 
 # have log required to view cart once registration/log in functionality complete
@@ -177,7 +234,7 @@ def shoppingCart():
     # upon form completion
     if request.method == 'POST':
         for product in cartItems:
-            db.session.delete(product)
+            product.isSold =True
             db.session.commit()
 
         flash('Check Out Success! Shipping information sent to email!', category='warning')
