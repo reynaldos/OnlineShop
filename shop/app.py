@@ -16,32 +16,36 @@ from . import db
 # @login_required -> cant access page unless user logged in
 
 app = Blueprint('app', __name__)
-@app.route('/')
+@app.route('/', methods=['GET', 'POST'])
 @app.route('/<string:sortby>', methods=['GET', 'POST'])
-def index(sortby='newest'):
+@app.route('/<string:sortby>/<string:search>', methods=['GET', 'POST'])
+def index(search='',sortby='newest'):
     
+    if request.method == 'POST':
+        search = request.form.get('search')
+       
     # list of prodcuts 
     productResult = list()
     if sortby == "newest":
-        productResult = sortProductBy('DateAdded', "DESC")
+        productResult = sortProductBy(search, 'DateAdded', "DESC")
     elif sortby == "priceDesc":
-        productResult = sortProductBy('Price', "DESC")
+        productResult = sortProductBy(search, 'Price', "DESC")
     elif sortby == "priceAsc":
-        productResult = sortProductBy('Price', "ASC")
+        productResult = sortProductBy(search,'Price', "ASC")
     else:
         flash('Invalid parameter.', category='error')
         return render_template('base.html', user=current_user)
 
     # if search bar triggered
-    # if len(productResult) < 1:
-    #     flash('Nothing found for that search. (All words must match.)', category='warning')
+    if len(productResult) < 1 and search:
+        flash('Nothing found for that search. (All words must match.)', category='warning')
 
     # default items list
     # if len(productResult) < 1:
     #     flash('No items posted yet.', category='warning')
 
 
-    return render_template('home.html', user=current_user, productsDict=productResult, now=datetime.utcnow(), sortby=sortby)
+    return render_template('home.html', user=current_user, productsDict=productResult, now=datetime.utcnow(), sortby=sortby, search=search)
 
 
 

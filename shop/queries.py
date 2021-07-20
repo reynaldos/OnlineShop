@@ -48,10 +48,10 @@ def userActiveProducts(userId):
     return result
 
 
-def sortProductBy(attribute = "Name", order="DESC"):
+def sortProductBy(search='', attribute = "Name", order="DESC"):
     """Returns active products sort"""
     with db.engine.connect() as connection:
-        data = connection.execute(text(f"SELECT * FROM Product WHERE isSold = TRUE ORDER BY {attribute} {order}")).fetchall()
+        data = connection.execute(text(f"SELECT * FROM (SELECT * FROM PRODUCT WHERE Name LIKE '%{search}%' OR Description LIKE '%{search}%') WHERE isSold = FALSE ORDER BY {attribute} {order}")).fetchall()
         result = read(data)
         return result
 
@@ -61,5 +61,12 @@ def getItemsFromCart(userId):
 
     with db.engine.connect() as connection:
         data = connection.execute(f"SELECT Products FROM Cart NATURAL JOIN User WHERE UserId = {userId}").fetchall()
+        result = read(data)
+        return result
+
+def searchProduct(search):
+    """Returns active products from search"""
+    with db.engine.connect() as connection:
+        data = connection.execute(text(f"SELECT * FROM (SELECT * FROM PRODUCT WHERE Name LIKE '%{search}%' OR Description LIKE '%{search}%') WHERE isSold = FALSE")).fetchall()
         result = read(data)
         return result
