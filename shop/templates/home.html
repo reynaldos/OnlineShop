@@ -2,15 +2,18 @@
 {% block content %}
     <!-- HTML Body content here -->
 
-    
+   
+
     <div class ="row p-2 d-flex justify-content-center">
         <!-- search bar -->
-        <div class="col-lg-9 p-2 d-flex justify-content-center" >
+        <div class="col-sm-8 p-2 d-flex justify-content-center" >
             <div class="input-group rounded">
                 <input type="search" class="form-control rounded" placeholder="Search" aria-label="Search"
                   aria-describedby="search-addon" />
                 <span class="input-group-text border-0" id="search-addon">
-                    <i class="fas fa-search"></i>
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-search" viewBox="0 0 16 16">
+                        <path d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001c.03.04.062.078.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1.007 1.007 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0z"/>
+                      </svg>
                 </span>
               </div>
         </div>
@@ -78,6 +81,9 @@
             </div>
           </div>
         {% endfor %}
+        {%if productsDict|length == 0 %}
+            <h4 class="col-sm-12 text-center"><small>No items posted yet.</small></h4>
+        {%endif%}
       </div>
    
     {% endblock %}

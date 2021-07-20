@@ -37,8 +37,8 @@ def index(sortby='newest'):
     #     flash('Nothing found for that search. (All words must match.)', category='warning')
 
     # default items list
-    if len(productResult) < 1:
-        flash('No items posted yet.', category='warning')
+    # if len(productResult) < 1:
+    #     flash('No items posted yet.', category='warning')
 
 
     return render_template('home.html', user=current_user, productsDict=productResult, now=datetime.utcnow(), sortby=sortby)
