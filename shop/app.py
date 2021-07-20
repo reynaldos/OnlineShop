@@ -45,7 +45,6 @@ def index(search='',sortby='newest'):
     return render_template('home.html', user=current_user, productsDict=productResult, now=datetime.utcnow(), sortby=sortby, search=search)
 
 
-
 @app.route('/login', methods=['GET','POST'])
 def login():
     if request.method == 'POST':
@@ -69,13 +68,7 @@ def login():
         else:
             flash('Email does not exist.  Please try again.', category='error')
 
-
     return render_template('login.html', user=current_user)
-
-# optional
-@app.route('/forgot')
-def forgot():
-    return render_template('forgot.html')
 
 
 @app.route('/registration',methods=['GET','POST'])
@@ -126,7 +119,6 @@ def registration():
 
             return redirect(url_for('app.index'))
             
-
     return render_template('registration.html', user=current_user)
 
 
@@ -145,14 +137,8 @@ def logOut():
     return redirect(url_for('app.LoginForm'))
 
 
-@app.route('/admin')
-@login_required
-def admin():
-    return render_template('Management.html',user=current_user)
-
-
 @app.route('/itemPost', methods=['GET','POST'])
-# @login_required
+@login_required
 def itemPost():
     if request.method == 'POST':
         # product info from form
@@ -174,7 +160,7 @@ def itemPost():
                 Description = pDesc,
                 Price = pPrice)
 
-             # to database
+             # product to database
             db.session.add(newProduct)
             db.session.commit()
 
@@ -184,7 +170,7 @@ def itemPost():
                 name=filename, 
                 mimetype=mimetype)
             
-            # to database
+            # img to database
             db.session.add(img)
             db.session.commit()
 
@@ -192,31 +178,6 @@ def itemPost():
             return redirect(url_for('app.index'))
 
     return render_template('itemPost.html',user=current_user)
-
-
-# have log required to view cart once registration/log in functionality complete
-# @app.route('/itemPost', methods=['GET','POST'])
-# #@login_required
-# def productForm():
-#     # uncoment upon registration completion
-#     # cartItems = getItemsFromCart(current_user.UserId)
-#     productItems = list()
-
-#     numberOfProducts = 0
-#     for product in productItems:
-#         numberOfProducts += product[5]
-
-#     # upon form completion
-#     if request.method == 'POST':
-#         for product in productItems:
-#             # db.session.delete(product)
-#             db.session.commit()
-
-#         flash('Your request has been recieved', category='success')
-#         return redirect(url_for('app.index')) 
-
-#     return render_template('itemPost.html',user=current_user, productsDict = productItems, numberOfProducts=numberOfProducts)
-
 
 # have log required to view cart once registration/log in functionality complete
 @app.route('/cart', methods=['GET','POST'])
@@ -240,10 +201,19 @@ def shoppingCart():
         flash('Check Out Success! Shipping information sent to email!', category='warning')
         return redirect(url_for('app.index')) 
 
-
-
     return render_template('cart.html',user=current_user, productsDict = cartItems, checkOutSum=checkOutSum)
 
 
+# TODO:
+# //////////////////////
+
+@app.route('/admin')
+@login_required
+def admin():
+    return render_template('Management.html',user=current_user)
 
 
+# optional
+@app.route('/forgot')
+def forgot():
+    return render_template('forgot.html')
