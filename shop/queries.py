@@ -10,50 +10,34 @@ from . import db
 query = Blueprint('query', __name__)
 
 
-# reads in queries
-def read(data):
-        """Takes in results of query and returns a list of dicts, whose keys are column names."""
-        
-        results = []
-
-        if len(data)==0:
-            return results
-
-        # results from sqlalchemy are returned as a list of tuples; this procedure converts it into a list of dicts
-        for row_number, row in enumerate(data):
-            results.append({})
-            for column_number, value in enumerate(row):
-                results[row_number][row.keys()[column_number]] = value
-
-        return results
-
-
 def getUserIds():
     """Returns all user Ids"""
 
     with db.engine.connect() as connection:
         data = connection.execute("SELECT UserId FROM User").fetchall()
-        result = read(data)
-        return result
+
+    result = [dict(row) for row in data]
+    return result
 
 
 def userActiveProducts(userId):
     """returns all products a user has posted"""
     with db.engine.connect() as connection:
         productData = connection.execute(f"SELECT ProductsForSale FROM User WHERE UserId = {userId} ").fetchall()
-        productList = read(productData)
 
+    productList = [dict(row) for row in productData]
         # check output type
-        result = [product for product in productList if product[8] == False]
+    result = [product for product in productList if product['isSold'] == False]
     return result
 
 
 def sortProductBy(search='', attribute = "Name", order="DESC"):
     """Returns active products sort"""
     with db.engine.connect() as connection:
-        data = connection.execute(text(f"SELECT * FROM (SELECT * FROM PRODUCT WHERE Name LIKE '%{search}%' OR Description LIKE '%{search}%') WHERE isSold = FALSE ORDER BY {attribute} {order}")).fetchall()
-        result = read(data)
-        return result
+        data = connection.execute(text(f"SELECT * FROM (SELECT * FROM product WHERE Name LIKE '%{search}%' OR Description LIKE '%{search}%') WHERE isSold = FALSE ORDER BY {attribute} {order}")).fetchall()
+       
+    result = [dict(row) for row in data]
+    return result
 
 
 def getItemsFromCart(userId):
@@ -61,12 +45,15 @@ def getItemsFromCart(userId):
 
     with db.engine.connect() as connection:
         data = connection.execute(f"SELECT Products FROM Cart NATURAL JOIN User WHERE UserId = {userId}").fetchall()
-        result = read(data)
-        return result
+
+    result = [dict(row) for row in data]
+    return result
+
 
 def searchProduct(search):
     """Returns active products from search"""
     with db.engine.connect() as connection:
         data = connection.execute(text(f"SELECT * FROM (SELECT * FROM PRODUCT WHERE Name LIKE '%{search}%' OR Description LIKE '%{search}%') WHERE isSold = FALSE")).fetchall()
-        result = read(data)
-        return result
+        
+    result = [dict(row) for row in data]
+    return result

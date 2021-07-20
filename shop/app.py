@@ -18,8 +18,8 @@ from . import db
 
 app = Blueprint('app', __name__)
 @app.route('/', methods=['GET', 'POST'])
-@app.route('/<string:sortby>', methods=['GET', 'POST'])
-@app.route('/<string:sortby>/<string:search>', methods=['GET', 'POST'])
+# @app.route('/<string:sortby>', methods=['GET', 'POST'])
+# @app.route('/<string:sortby>/<string:search>', methods=['GET', 'POST'])
 def index(search='',sortby='newest'):
     
     # fix bug
@@ -138,7 +138,7 @@ def logOut():
 
 
 @app.route('/itemPost', methods=['GET','POST'])
-@login_required
+# @login_required
 def itemPost():
     if request.method == 'POST':
         # product info from form
@@ -155,7 +155,7 @@ def itemPost():
           flash('Image required to submit item.', category='error')
         else:
             newProduct = Product(
-                SellerID = current_user.UserId,
+                SellerID = 999,
                 Name = pName,
                 Description = pDesc,
                 Price = pPrice)
@@ -164,6 +164,7 @@ def itemPost():
             db.session.add(newProduct)
             db.session.commit()
 
+            
             img = Img(
                 ProductId=newProduct.PID,
                 img=pPic.read(), 
@@ -174,14 +175,14 @@ def itemPost():
             db.session.add(img)
             db.session.commit()
 
-            flash('Item Post!', category='success')
+            flash('Item Posted!', category='success')
             return redirect(url_for('app.index'))
 
     return render_template('itemPost.html',user=current_user)
 
 # have log required to view cart once registration/log in functionality complete
 @app.route('/cart', methods=['GET','POST'])
-@login_required
+# @login_required
 def shoppingCart():
     # uncoment upon registration completion
     # cartItems = getItemsFromCart(current_user.UserId)

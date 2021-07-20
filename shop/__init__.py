@@ -15,10 +15,13 @@ def create_app():
     db.init_app(myapp)
 
     from .app import app
+    from .app import query
+
 
     myapp.register_blueprint(app, url_prefix='/')
+    myapp.register_blueprint(query, url_prefix='/')
 
-    from .models import User
+    from .models import User, Product, Cart, Img
 
     # create DB
     create_database(myapp)
@@ -41,7 +44,6 @@ def create_app():
 def create_database(app):
     # if no db found in directory, create a new one
     # might not work on different os
-
     if not path.exists('shop/' + DB_NAME): 
         db.create_all(app=app)
         print('DB Created')
