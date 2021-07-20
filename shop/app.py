@@ -29,8 +29,8 @@ def index(sortby='newest'):
     elif sortby == "priceAsc":
         productResult = sortProductBy('Price', "ASC")
     else:
-        return 
-
+        flash('Invalid parameter.', category='error')
+        return render_template('base.html', user=current_user)
 
     # if search bar triggered
     # if len(productResult) < 1:
@@ -159,12 +159,13 @@ def itemPost():
 
 # have log required to view cart once registration/log in functionality complete
 @app.route('/cart', methods=['GET','POST'])
-# @login_required
+@login_required
 def shoppingCart():
     # uncoment upon registration completion
     # cartItems = getItemsFromCart(current_user.UserId)
     cartItems = list()
 
+    # calculate check out total cost
     checkOutSum = 0
     for product in cartItems:
         checkOutSum += product[5]
@@ -175,7 +176,7 @@ def shoppingCart():
             db.session.delete(product)
             db.session.commit()
 
-        flash('Check Out Success! Shipping information sent to email!', category='success')
+        flash('Check Out Success! Shipping information sent to email!', category='warning')
         return redirect(url_for('app.index')) 
 
 

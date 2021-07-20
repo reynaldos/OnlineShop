@@ -3,9 +3,9 @@
     <!-- HTML Body content here -->
 
     
-    <div class ="row p-2">
+    <div class ="row p-2 d-flex justify-content-center">
         <!-- search bar -->
-        <div class="col-md-8 p-2">
+        <div class="col-lg-9 p-2 d-flex justify-content-center" >
             <div class="input-group rounded">
                 <input type="search" class="form-control rounded" placeholder="Search" aria-label="Search"
                   aria-describedby="search-addon" />
@@ -15,7 +15,7 @@
               </div>
         </div>
         <!-- sort by drop down -->
-        <div class="col-md-4 d-flex justify-content-end p-2">
+        <div class="col-xs-2 p-2">
             <div class="dropstart">
                 <button class="btn btn-secondary dropdown-toggle btn-info" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                   Sort By
@@ -24,9 +24,12 @@
                     <a class="dropdown-item {%if sortby=='newest'%} active {%endif%}" href="{{url_for('app.index', sortby='newest')}}">Newest Arrival</a>
                     <a class="dropdown-item {%if sortby=='priceDesc'%} active {%endif%}" href="{{url_for('app.index', sortby='priceDesc')}}" >Price: High to low</a>
                     <a class="dropdown-item {%if sortby=='priceAsc'%} active {%endif%}" href="{{url_for('app.index', sortby='priceAsc')}}">Price: Low to High</a>
-                  
                 </div>
               </div>
+        </div>
+        <!-- upload item button -->
+        <div class="col-xs-1 p-2">
+            <a class="btn btn-secondary btn-success" role="button" id="uploadItem" href="{{ url_for('app.itemPost') }}">+</a>
         </div>
         
         

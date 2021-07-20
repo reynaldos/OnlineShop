@@ -26,6 +26,8 @@ def create_app():
     login_manager = LoginManager()
     login_manager.login_view = 'app.login'
     login_manager.init_app(myapp)
+    login_manager.login_message = 'Please log in to access this page.'
+    login_manager.login_message_category = 'warning'
 
     @login_manager.user_loader
     def load_user(id):
