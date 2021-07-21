@@ -38,7 +38,13 @@
             <a class="btn btn-secondary btn-success" role="button" id="uploadItem" href="{{ url_for('app.itemPost') }}">+</a>
         </div>
         
-        
+    <style>
+.button {
+    position:absolute;
+    top:8px;
+    right: 8px;}
+</style>
+       
     </div>
     <!-- products on display-->
     <div class="row p-2"> 
@@ -52,10 +58,12 @@
                     {%if url_for('app.get_img', id=product['PID']) == null%}
                     <div class="carousel-item active">
                         <img class="d-block w-100" src="{{url_for('static', filename='logo.png')}}" alt="logo">
+                        {%if user.UserId == product['SellerID'] %}<button type="button" class="btn btn-secondary btn-sm button">Edit</button>{%endif%}
                         </div>
                     {%else%}
                     <div class="carousel-item active">
                         <img class="d-block w-100" src="{{url_for('app.get_img',id=product['PID']) }}">       
+                        {%if user.UserId == product['SellerID'] %}<button type="button" class="btn btn-secondary btn-sm button">Edit</button>{%endif%}
                     </div>
                     {%endif%}
                 </div>

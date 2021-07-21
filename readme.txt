@@ -12,5 +12,6 @@ How To Run Application on macOS:
 
 
 Admin Account:
-username: admin@usf.edu
+Email: admin@usf.edu
 password: 12345
+UserId: 1

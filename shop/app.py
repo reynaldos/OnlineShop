@@ -39,7 +39,7 @@ def index(search='',sortby='newest'):
         productResult = sortProductBy(search,'Name', "DESC")
     else:
         flash('Invalid parameter.', category='error')
-        return render_template('base.html', user=current_user)
+        # return render_template('home.html', user=current_user, productsDict=productResult, now=datetime.utcnow(), sortby=sortby, search=search)
 
     # if search bar triggered
     if len(productResult) < 1 and search:
@@ -160,8 +160,7 @@ def itemPost():
           flash('Image required to submit item.', category='error')
         else:
             newProduct = Product(
-                # SellerID = current_user.UserId,
-                SellerID = 999,
+                SellerID = current_user.UserId,
                 Name = pName,
                 Description = pDesc,
                 Price = pPrice)
@@ -170,7 +169,7 @@ def itemPost():
             db.session.add(newProduct)
             db.session.commit()
 
-            dbNewProduct = Product.query.filter_by(Name=pName, SellerID=999).first()
+            dbNewProduct = Product.query.filter_by(Name=pName, SellerID=current_user.UserId).first()
             img = Img(
                 ProductId=dbNewProduct.PID,
                 img=pPic.read(), 
@@ -185,6 +184,50 @@ def itemPost():
             return redirect(url_for('app.index'))
 
     return render_template('itemPost.html',user=current_user)
+
+
+@app.route('/editPost/<int:PID>', methods=['GET','POST'])
+@login_required
+def EditPost(PID):
+    productFound = query.filter_by(PID=PID).first()
+
+    if request.method == 'POST' and productFound.SellerId in (current_user.UserId, 1):
+        # product info from form
+        pName = request.form.get('ProductName')
+        pDesc = request.form.get('ProductDescription')
+        pPrice = request.form.get('ProductPrice')
+
+        # image info from form
+        # pPic = request.files['uploadImg']
+        # filename = secure_filename(pPic.filename)
+        # mimetype = pPic.mimetype
+    
+        # if not pPic:
+        #   flash('Image required to submit item.', category='error')
+        # else:
+       
+        if productFound:
+            productFound.Name = pName
+            productFound.Description = pDesc
+            productFound.Price = pPrice
+            # update database
+            db.session.commit()
+            flash('Item Updated!', category='success')
+            return redirect(url_for('app.index'))
+        else:
+            flash("Error editing post.", category="error")
+                
+            # dbNewProduct = Product.query.filter_by(Name=pName, SellerID=current_user.UserId).first()
+            # img = Img(
+            #     ProductId=dbNewProduct.PID,
+            #     img=pPic.read(), 
+            #     name=filename, 
+            #     mimetype=mimetype)
+            
+            # update database
+            # db.session.add(img)
+            
+    return render_template('itemPost.html',user=current_user,PID=PID)
 
 # have log required to view cart once registration/log in functionality complete
 @app.route('/cart', methods=['GET','POST'])

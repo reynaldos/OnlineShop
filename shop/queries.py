@@ -31,7 +31,7 @@ def userActiveProducts(userId):
 def getProductImgs(productID):
     """returns all imgs that belong to a post"""
     with db.engine.connect() as connection:
-        data = connection.execute(text(f"SELECT * FROM product JOIN img WHERE ProductId = {productID}")).fetchall() 
+        data = connection.execute(text(f"SELECT * FROM img WHERE ProductId = {productID}")).fetchall() 
     result = [dict(row) for row in data]
     return result
 
