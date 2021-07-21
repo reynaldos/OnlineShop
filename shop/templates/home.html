@@ -45,7 +45,7 @@
     top:8px;
     right: 8px;}
 </style>
-       
+
     </div>
     <!-- products on display-->
     <div class="row p-2"> 
@@ -89,7 +89,7 @@
                 <p class="card-text">{{ product['Description'] }}</p>
                 <div class="d-flex justify-content-between align-items-center">
                   <div class="btn-group">
-                    <button type="button"  class="btn btn-sm btn-outline-success">Add to Cart</button>
+                    <button type="button" onClick="addCartItem({{ product['PID'] }})" class="btn btn-sm btn-outline-success">Add to Cart</button>
                   </div>
                    <!-- product time since posted -->
                   <small class="text-muted">{#now - product['DateAdded'] #}</small>
@@ -102,7 +102,20 @@
             <h4 class="col-sm-12 text-center"><small>No items found.</small></h4>
         {%endif%}
       </div>
+
+      <script>
+        function addCartItem(PID) {
+                      fetch("/add-item", {
+                        method: "POST",
+                        body: JSON.stringify({ PID: PID }),
+                      }).then((_res) => {
+                        
+                        window.location.href = "/";
+                      });
+                    }
+      
+      </script>
    
     {% endblock %}
 
-    {#href="{{addToCart(product['PID'])}}"#}
+    

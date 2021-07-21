@@ -1,5 +1,5 @@
 from os import remove
-from flask import Flask, render_template, request, send_from_directory, url_for, redirect, flash, Blueprint, Response
+from flask import Flask, render_template, request, jsonify, url_for, redirect, flash, Blueprint, Response
 from flask_login import login_user, login_required, logout_user, current_user
 from sqlalchemy.orm import query
 from sqlalchemy.sql.expression import null
@@ -11,7 +11,8 @@ from .models import User,Product,Cart, Img
 from datetime import datetime
 from .queries import *
 from . import db
-from jinja2 import Template
+import json
+
 
 
 # user=current_user  -> links current user to each template
@@ -53,7 +54,7 @@ def index(search='',sortby='newest'):
     if len(productResult) < 1 and search:
         flash('Nothing found for that search. (All words must match.)', category='warning')
 
-    return render_template('home.html', user=current_user, productsDict=productResult, now=datetime.utcnow(), sortby=sortby, search=search, addToCart=addToCart)
+    return render_template('home.html', user=current_user, productsDict=productResult, now=datetime.utcnow(), sortby=sortby, search=search)
 
 
 @app.route('/login', methods=['GET','POST'])
@@ -268,8 +269,7 @@ def editPost(PID):
 @login_required
 def shoppingCart():
     # uncoment upon registration completion
-    userCart = getItemsFromCart(current_user.UserId)
-    
+    userCart = userCart = Cart.query.filter_by(UserId=current_user.UserId).first()
 
     # calculate check out total cost
     checkOutSum = 0
@@ -280,10 +280,11 @@ def shoppingCart():
     # upon form completion
     if request.method == 'POST':
         for product in userCart.Products:
+            userCart.remove(product)
             product.isSold =True
             db.session.commit()
 
-        flash('Check Out Success! Shipping information sent to email!', category='warning')
+        flash('Check Out Success! Shipping information sent to email!', category='success')
         return redirect(url_for('app.index')) 
 
     return render_template('cart.html',user=current_user, cartItems = userCart.Products, checkOutSum=checkOutSum)
@@ -321,24 +322,50 @@ def accountSettings():
     return render_template('home.html', user=current_user)
 
 
-# @login_required
-# @app.route('/cart/', methods=['POST'])
-def addToCart(PID):
-    userCart = Cart.query.filter_by(UserId=current_user.UserId).first()
-    item = Product.query.filter_by(PID=PID).first()
 
-    # Item not found
-    if not item:
-        flash('Item Not Found', category="error") 
-    # Item already carted
-    elif item in userCart.Products:
-        flash('Item already in Cart', category="error")
-    else:
-        userCart.Products.append(item)
-        db.session.commit()
-        flash('Item added to Cart', category="success")
-        
-#     return redirect(url_for('app.index'))
+@app.route('/add-item', methods=['POST'])
+@login_required
+def addCartItem():
+    # finds user cart
+    userCart = Cart.query.filter_by(UserId=current_user.UserId).first()
+
+    # gets PID from request
+    form = json.loads(request.data)
+    foundPID = form['PID']
+
+    # gets product and removes from user cart
+    item  = Product.query.filter_by(PID=foundPID).first()
+    if item:
+        if item in userCart.Products:
+            flash('Item already in cart!', category='warning')
+
+        elif userCart.UserId == current_user.UserId:
+            userCart.Products.append(item)
+            db.session.commit()
+            flash('Item added to cart!', category='success')
+        else:
+            return 404
+
+    return jsonify({})
+
+@app.route('/remove-item', methods=['POST'])
+@login_required
+def removeCartItem():
+    # finds user cart
+    userCart = Cart.query.filter_by(UserId=current_user.UserId).first()
+
+    # gets PID from request
+    form = json.loads(request.data)
+    foundPID = form['PID']
+
+    # gets product and removes from user cart
+    item  = Product.query.filter_by(PID=foundPID).first()
+    if item:
+        if userCart.UserId == current_user.UserId:
+            userCart.Products.remove(item)
+            db.session.commit()
+
+    return jsonify({})
 
 
 

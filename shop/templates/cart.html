@@ -4,21 +4,25 @@
     <h1>Shopping Cart</h1>
    
     <div class="row g-5">
-        <div class="col-md-5 col-lg-4 order-md-last">
+        <div class="col-md-5 col-lg-5 order-md-last">
           <h4 class="d-flex justify-content-between align-items-center mb-3">
             <span class="text-primary">Your cart</span>
-            <span class="badge bg-primary rounded-pill">{{ productsDict|length }}</span>
+            <span class="badge bg-primary rounded-pill">{{ cartItems|length }}</span>
           </h4>
           <ul class="list-group mb-3">
         
-              {% if cartItems|length > 1 %}
+              {% if cartItems|length > 0 %}
                 {% for product in cartItems%}
                     <li class="list-group-item d-flex justify-content-between lh-sm">
-                        <div>
-                        <h6 class="my-0">{{product.Name}}</h6>
-                        <small class="text-muted">Brief description</small>
+                        <div class="row">
+                        <img width="100%" class="d-block col-sm-3" src="{{url_for('app.get_img',id=product.PID) }}">
+                        <h6 class="my-0 col-sm-6 ">{{product.Name}}</h6>
+                        <span class="text-muted col-sm-2 ">${{product.Price|round|int}}</span>
                         </div>
-                        <span class="text-muted">${{product.Price|round|int}}</span>
+                        <button type="button " class="close m-l-10" onClick="removeCartItem({{ product.PID }})">
+                          <span aria-hidden="true">&times;</span>
+                        </button>
+                        
                     </li>
                 {% endfor%}
               {% else %}
@@ -29,13 +33,21 @@
             
             <li class="list-group-item d-flex justify-content-between">
               <span>Total (USD)</span>
-              <strong>${{checkOutSum}}|round|int</strong>
+              <strong>${{checkOutSum|round|int}}</strong>
             </li>
           </ul>
   
         </div>
 
         <script>
+          function removeCartItem(PID) {
+                fetch("/remove-item", {
+                  method: "POST",
+                  body: JSON.stringify({ PID: PID }),
+                }).then((_res) => {
+                  window.location.href = "/cart";
+                });
+              }
             function ShowHideDiv() {
                     var chkYes = document.getElementById("same-address");
                     var divToHide = document.getElementById("billingAddress");
@@ -43,7 +55,7 @@
                 }
             </script>
 
-        <div class="col-md-7 col-lg-8">
+        <div class="col-md-7 col-lg-7">
 
             <h4 class="mb-3">Shipping address</h4>
             <form class="needs-validation" novalidate="" method="POST" >
@@ -103,7 +115,7 @@
       
                   <div class="col-md-4">
                     <label for="zip" class="form-label">Zip</label>
-                    <input type="text" class="form-control" id="zip" placeholder="" required="" value={{user.Zip}}>
+                    <input type="text" class="form-control" id="zip" placeholder="" required="" value={{user.ZipCode}}>
                     <div class="invalid-feedback">
                       Zip code required.
                     </div>
