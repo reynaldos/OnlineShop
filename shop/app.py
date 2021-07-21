@@ -206,6 +206,10 @@ def itemPost():
 def editPost(PID):
     productFound = Product.query.filter_by(PID=PID).first()
 
+    if current_user.UserId != productFound.SellerID:
+        flash('Access Denied', category='warning')
+        return redirect(url_for('app.index'))
+
     if request.method == 'POST' and productFound.SellerID in (current_user.UserId, 1):
         # product info from form
         pName = request.form.get('ProductName')
@@ -285,6 +289,11 @@ def get_img(id):
 @app.route('/admin')
 @login_required
 def admin():
+    if current_user.Email != 'admin@usf.edu' or current_user.UserId != 1:
+        flash('Access Denied.', category='error')
+        return redirect(url_for('app.index')) 
+        
+        
     return render_template('admin.html',user=current_user)
 
 
