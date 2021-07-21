@@ -17,6 +17,7 @@ from . import db
 # @login_required -> cant access page unless user logged in
 
 app = Blueprint('app', __name__)
+
 @app.route('/', methods=['GET', 'POST'])
 @app.route('/<string:sortby>/', methods=['GET', 'POST'])
 @app.route('/<string:sortby>/<string:search>', methods=['GET', 'POST'])
@@ -127,12 +128,26 @@ def registration():
     return render_template('registration.html', user=current_user)
 
 
-@app.route('/accountSettings',methods=['GET','POST'])
-@login_required
-def accountSettings():
-    # allows user to change user info
+@app.route('/forgot', methods=['GET','POST'])
+def forgot():
+    if request.method == 'POST':
+        Email_address = request.form.get('email')
+    
+        # looks for user in DB
+        user = User.query.filter_by(Email=Email_address).first()
 
-    return render_template('home.html', user=current_user)
+        # if user found checks password
+        # if wrong password throw error
+        # if user not found throw error
+    
+        if user:
+            flash('Recovery email sent!', category='warning')
+            return redirect(url_for('app.login', user=current_user))
+        else:
+            flash('Email does not exist.  Please try again.', category='error')
+
+
+    return render_template('forgot.html',user=current_user)
 
 
 @app.route('/logout')
@@ -230,7 +245,7 @@ def editPost(PID):
             
     return render_template('editPost.html',user=current_user,productFound=productFound)
 
-# have log required to view cart once registration/log in functionality complete
+
 @app.route('/cart', methods=['GET','POST'])
 @login_required
 def shoppingCart():
@@ -273,24 +288,9 @@ def admin():
     return render_template('admin.html',user=current_user)
 
 
-# optional
-@app.route('/forgot', methods=['GET','POST'])
-def forgot():
-    if request.method == 'POST':
-        Email_address = request.form.get('email')
-    
-        # looks for user in DB
-        user = User.query.filter_by(Email=Email_address).first()
+@app.route('/accountSettings',methods=['GET','POST'])
+@login_required
+def accountSettings():
+    # allows user to change user info
 
-        # if user found checks password
-        # if wrong password throw error
-        # if user not found throw error
-    
-        if user:
-            flash('Recovery email sent!', category='warning')
-            return redirect(url_for('app.login', user=current_user))
-        else:
-            flash('Email does not exist.  Please try again.', category='error')
-
-
-    return render_template('forgot.html',user=current_user)
+    return render_template('home.html', user=current_user)
