@@ -1,0 +1,33 @@
+{% extends "base.html" %} {% block title %}Forgot Password{% endblock %} 
+{% block content%}
+    
+        <div class="limiter" style="height: 400px;">
+            <div class="container-login100" style="height: 400px;">
+                <div class="wrap-login100-signup" style="height: 400px;">
+                    <form method="POST" class="login100-form validate-form">
+                        <span class="login100-form-title p-b-26">
+                            Trouble accessing your account?
+                        </span>
+                        <span class="login100-form-subtitle p-b-48">
+                            Enter your email address and we'll send you a password reset link.
+                        </span>
+                        
+                        <div class="wrap-input100 validate-input m-t-20" data-validate = "Valid email is: a@b.c">
+                            <input class="input100" type="text" name="email">
+                            <span class="focus-input100" data-placeholder="Email"></span>
+                        </div>
+                        
+                        <div class="container-login100-form-btn">
+                            <div class="wrap-login100-form-btn">
+                                <div class="login100-form-bgbtn"></div>
+                                <button class="login100-form-btn">
+                                    Send Link
+                                </button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+        
+    {% endblock %}

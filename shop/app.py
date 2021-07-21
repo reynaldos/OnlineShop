@@ -274,6 +274,23 @@ def admin():
 
 
 # optional
-@app.route('/forgot')
+@app.route('/forgot', methods=['GET','POST'])
 def forgot():
-    return render_template('forgot.html')
+    if request.method == 'POST':
+        Email_address = request.form.get('email')
+    
+        # looks for user in DB
+        user = User.query.filter_by(Email=Email_address).first()
+
+        # if user found checks password
+        # if wrong password throw error
+        # if user not found throw error
+    
+        if user:
+            flash('Recovery email sent!', category='warning')
+            return redirect(url_for('app.login', user=current_user))
+        else:
+            flash('Email does not exist.  Please try again.', category='error')
+
+
+    return render_template('forgot.html',user=current_user)
