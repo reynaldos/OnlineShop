@@ -44,18 +44,18 @@
           <div class="navbar-nav">
             <!-- logout tab only viewed once logged in-->
           {% if user.is_authenticated %}
-          <a class="nav-item nav-link" id="logout" href="{{ url_for('app.logOut') }}">Logout</a>
+          <a class="navbar-sub nav-link" id="logout" href="{{ url_for('app.logOut') }}">Logout</a>
           <!-- admin tab only viewed if user name is admin -->
-            {% if user.name == 'admin' %}
-            <a class="nav-item nav-link" id="logout" href="{{ url_for('app.admin') }}">Admin</a>
+            {% if user.Fname == 'admin' and user.Lname == 'admin' and user.Email == 'admin@usf.edu'%}
+            <a class="navbar-sub nav-link" id="logout" href="{{ url_for('app.admin') }}">Admin</a>
             {% endif %}
           {% else %}
           <!-- login/sign up tabs only shown if user not logged in-->
-          <a class="navbar-sub" id="login" href="/login">Login</a>
-          <a class="navbar-sub" id="signUp" href="/registration">Sign Up</a>
+          <a class="navbar-sub nav-link" id="login" href="/login">Login</a>
+         
           {% endif %}
           <!-- cart tab always viewed -->
-          <a class="navbar-sub" id="logout" href="{{ url_for('app.shoppingCart') }}">Cart</a>
+          <a class="navbar-sub nav-link" id="logout" href="{{ url_for('app.shoppingCart') }}">Cart</a>
         </div>
         </div>
       </div>

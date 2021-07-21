@@ -8,7 +8,7 @@
         <!-- search bar -->
         <form class="col-sm-8 p-2 d-flex justify-content-center" method="POST">
             <div class="input-group rounded">   
-                <input type="search" class="form-control rounded" placeholder="Search" aria-label="Search" name="search"
+                <input type="search" class="form-control rounded" placeholder="Search" aria-label="Search" name="search" value="{%if search != ''%}{{search}}{%endif%}"
                   aria-describedby="search-addon" />
                 <button class="input-group-text border-0" type="submit" >
                     <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-search" viewBox="0 0 16 16">
@@ -28,6 +28,8 @@
                     <a class="dropdown-item {%if sortby=='newest'%} active {%endif%}" href="{{url_for('app.index', sortby='newest', search=search)}}">Newest Arrival</a>
                     <a class="dropdown-item {%if sortby=='priceDesc'%} active {%endif%}" href="{{url_for('app.index', sortby='priceDesc', search=search)}}" >Price: High to low</a>
                     <a class="dropdown-item {%if sortby=='priceAsc'%} active {%endif%}" href="{{url_for('app.index', sortby='priceAsc', search=search)}}">Price: Low to High</a>
+                    <a class="dropdown-item {%if sortby=='alphaAZ'%} active {%endif%}" href="{{url_for('app.index', sortby='alphaAZ', search=search)}}">Alphabetical: A-Z</a>
+                    <a class="dropdown-item {%if sortby=='alphaZA'%} active {%endif%}" href="{{url_for('app.index', sortby='alphaZA', search=search)}}">Alphabetical: Z-A</a>
                 </div>
               </div>
         </div>
@@ -46,18 +48,15 @@
               <div id="carouselExampleControls" class="carousel slide" data-ride="carousel">
                 <div class="carousel-inner">
                     <!-- displays all images for a product -->
-                    {% for image in product['Images'] %}
-                    <div class="carousel-item active">
-                        <img class="d-block w-100" src="{{img['img']}}" mimetype="{{img['mimetype']}}" alt="{{img['name']}}">
-                        here
-                        </div>
-                    {% endfor %}
-                    
-                    {%if product['Images']|length == 0%}
+                   
+                    {%if url_for('app.get_img', id=product['PID']) == null%}
                     <div class="carousel-item active">
                         <img class="d-block w-100" src="{{url_for('static', filename='logo.png')}}" alt="logo">
                         </div>
-
+                    {%else%}
+                    <div class="carousel-item active">
+                        <img class="d-block w-100" src="{{url_for('app.get_img',id=product['PID']) }}">       
+                    </div>
                     {%endif%}
                 </div>
 

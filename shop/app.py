@@ -1,5 +1,5 @@
 from os import remove
-from flask import Flask, render_template, request, send_from_directory, url_for, redirect, flash, Blueprint
+from flask import Flask, render_template, request, send_from_directory, url_for, redirect, flash, Blueprint, Response
 from flask_login import login_user, login_required, logout_user, current_user
 from sqlalchemy.orm import query
 from sqlalchemy.sql.expression import null
@@ -18,15 +18,14 @@ from . import db
 
 app = Blueprint('app', __name__)
 @app.route('/', methods=['GET', 'POST'])
-# @app.route('/<string:sortby>', methods=['GET', 'POST'])
-# @app.route('/<string:sortby>/<string:search>', methods=['GET', 'POST'])
+@app.route('/<string:sortby>/', methods=['GET', 'POST'])
+@app.route('/<string:sortby>/<string:search>', methods=['GET', 'POST'])
 def index(search='',sortby='newest'):
     
-    # fix bug
     if request.method == 'POST':
         search = request.form.get('search')
        
-    # list of prodcuts 
+    # list of prodcuts sorted
     productResult = list()
     if sortby == "newest":
         productResult = sortProductBy(search, 'DateAdded', "DESC")
@@ -34,6 +33,10 @@ def index(search='',sortby='newest'):
         productResult = sortProductBy(search, 'Price', "DESC")
     elif sortby == "priceAsc":
         productResult = sortProductBy(search,'Price', "ASC")
+    elif sortby == "alphaAZ":
+        productResult = sortProductBy(search,'Name', "ASC")
+    elif sortby == "alphaZA":
+        productResult = sortProductBy(search,'Name', "DESC")
     else:
         flash('Invalid parameter.', category='error')
         return render_template('base.html', user=current_user)
@@ -140,7 +143,7 @@ def logOut():
 
 
 @app.route('/itemPost', methods=['GET','POST'])
-# @login_required
+@login_required
 def itemPost():
     if request.method == 'POST':
         # product info from form
@@ -157,6 +160,7 @@ def itemPost():
           flash('Image required to submit item.', category='error')
         else:
             newProduct = Product(
+                # SellerID = current_user.UserId,
                 SellerID = 999,
                 Name = pName,
                 Description = pDesc,
@@ -166,9 +170,9 @@ def itemPost():
             db.session.add(newProduct)
             db.session.commit()
 
-            
+            dbNewProduct = Product.query.filter_by(Name=pName, SellerID=999).first()
             img = Img(
-                ProductId=newProduct.PID,
+                ProductId=dbNewProduct.PID,
                 img=pPic.read(), 
                 name=filename, 
                 mimetype=mimetype)
@@ -184,7 +188,7 @@ def itemPost():
 
 # have log required to view cart once registration/log in functionality complete
 @app.route('/cart', methods=['GET','POST'])
-# @login_required
+@login_required
 def shoppingCart():
     # uncoment upon registration completion
     # cartItems = getItemsFromCart(current_user.UserId)
@@ -207,13 +211,22 @@ def shoppingCart():
     return render_template('cart.html',user=current_user, productsDict = cartItems, checkOutSum=checkOutSum)
 
 
+@app.route('/<int:id>/')
+def get_img(id):
+    img = Img.query.filter_by(id=id).first()
+    
+    if img:
+        return Response(img.img, mimetype=img.mimetype)
+    else:
+        return null
+
 # TODO:
 # //////////////////////
 
 @app.route('/admin')
 @login_required
 def admin():
-    return render_template('Management.html',user=current_user)
+    return render_template('admin.html',user=current_user)
 
 
 # optional
