@@ -188,15 +188,16 @@ def itemPost():
 
 @app.route('/editPost/<int:PID>', methods=['GET','POST'])
 @login_required
-def EditPost(PID):
-    productFound = query.filter_by(PID=PID).first()
+def editPost(PID):
+    productFound = Product.query.filter_by(PID=PID).first()
 
-    if request.method == 'POST' and productFound.SellerId in (current_user.UserId, 1):
+    if request.method == 'POST' and productFound.SellerID in (current_user.UserId, 1):
         # product info from form
         pName = request.form.get('ProductName')
         pDesc = request.form.get('ProductDescription')
         pPrice = request.form.get('ProductPrice')
 
+        # add img change functionality
         # image info from form
         # pPic = request.files['uploadImg']
         # filename = secure_filename(pPic.filename)
@@ -227,7 +228,7 @@ def EditPost(PID):
             # update database
             # db.session.add(img)
             
-    return render_template('itemPost.html',user=current_user,PID=PID)
+    return render_template('editPost.html',user=current_user,productFound=productFound)
 
 # have log required to view cart once registration/log in functionality complete
 @app.route('/cart', methods=['GET','POST'])
