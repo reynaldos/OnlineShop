@@ -47,9 +47,9 @@ def sortProductBy(search='', attribute = "Name", order="DESC"):
 def getItemsFromCart(userId):
     """Returns items user added to car"""
     with db.engine.connect() as connection:
-        data = connection.execute(f"SELECT Products FROM Cart NATURAL JOIN User WHERE UserId = {userId}").fetchall()
-    result = [dict(row) for row in data]
-    return result
+        data = connection.execute(f"SELECT * FROM cart WHERE UserId = {userId}").first()
+    # result = [dict(row) for row in data]
+    return data
 
 
 def searchProduct(search):

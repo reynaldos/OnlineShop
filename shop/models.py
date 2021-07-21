@@ -1,5 +1,5 @@
 from enum import unique
-from . import db
+from . import *
 from flask_login import UserMixin
 from sqlalchemy.sql import func
 
@@ -24,12 +24,10 @@ class User(db.Model, UserMixin):
     def get_id(self):
         return self.UserId
 
-
 cartIdentifier = db.Table('cartIdentifier',
-    db.Column('PID', db.Integer, db.ForeignKey('product.PID'), primary_key = True),
-    db.Column('CID', db.Integer, db.ForeignKey('cart.CID'), primary_key = True)
+    db.Column('PID', db.Integer, db.ForeignKey('product.PID')),
+    db.Column('CID', db.Integer, db.ForeignKey('cart.CID'))
 )
-
 
 class Cart(db.Model):
     CID = db.Column(db.Integer, primary_key=True) 

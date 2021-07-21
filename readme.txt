@@ -7,9 +7,14 @@ How To Run Application on macOS:
 2. Set Flask Environment to 'development'
     - Command: 'export FLASK_ENV=development'
 
-1. Run Flask Application
-    - Command: 'python3 main.py'
+3. Run Flask Application
+    - Command: 'python3 -m flask run'
 
+
+
+If changes to models are made:
+    1. Command: 'python3 -m flask db migrate'
+    2. Command: 'python3 -m flask db upgrade'
 
 Admin Account:
 Email: admin@usf.edu

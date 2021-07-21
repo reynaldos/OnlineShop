@@ -83,16 +83,16 @@
                   <div class="d-flex justify-content-between align-items-center">
                       <!-- product name & price -->
                 <h5 class="card-text">{{ product['Name'] }}</h5>
-                <h5 class="card-text">${{ product['Price'] }}</h5>
+                <h5 class="card-text">${{ product['Price']|round|int }}</h5>
             </div>
                    <!-- product description -->
                 <p class="card-text">{{ product['Description'] }}</p>
                 <div class="d-flex justify-content-between align-items-center">
                   <div class="btn-group">
-                    <button type="button" class="btn btn-sm btn-outline-success">Add to Cart</button>
+                    <button type="button"  class="btn btn-sm btn-outline-success">Add to Cart</button>
                   </div>
                    <!-- product time since posted -->
-                  <small class="text-muted">{# now - product['DateAdded'] #}</small>
+                  <small class="text-muted">{#now - product['DateAdded'] #}</small>
                 </div>
               </div>
             </div>
@@ -104,3 +104,5 @@
       </div>
    
     {% endblock %}
+
+    {#href="{{addToCart(product['PID'])}}"#}

@@ -11,14 +11,14 @@
           </h4>
           <ul class="list-group mb-3">
         
-              {% if productsDict|length > 1 %}
-                {% for product in productsDict%}
+              {% if cartItems|length > 1 %}
+                {% for product in cartItems%}
                     <li class="list-group-item d-flex justify-content-between lh-sm">
                         <div>
-                        <h6 class="my-0">product[3]</h6>
+                        <h6 class="my-0">{{product.Name}}</h6>
                         <small class="text-muted">Brief description</small>
                         </div>
-                        <span class="text-muted">$product[5]</span>
+                        <span class="text-muted">${{product.Price|round|int}}</span>
                     </li>
                 {% endfor%}
               {% else %}
@@ -29,7 +29,7 @@
             
             <li class="list-group-item d-flex justify-content-between">
               <span>Total (USD)</span>
-              <strong>${{checkOutSum}}</strong>
+              <strong>${{checkOutSum}}|round|int</strong>
             </li>
           </ul>
   

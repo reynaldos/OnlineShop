@@ -11,6 +11,7 @@ from .models import User,Product,Cart, Img
 from datetime import datetime
 from .queries import *
 from . import db
+from jinja2 import Template
 
 
 # user=current_user  -> links current user to each template
@@ -52,7 +53,7 @@ def index(search='',sortby='newest'):
     if len(productResult) < 1 and search:
         flash('Nothing found for that search. (All words must match.)', category='warning')
 
-    return render_template('home.html', user=current_user, productsDict=productResult, now=datetime.utcnow(), sortby=sortby, search=search)
+    return render_template('home.html', user=current_user, productsDict=productResult, now=datetime.utcnow(), sortby=sortby, search=search, addToCart=addToCart)
 
 
 @app.route('/login', methods=['GET','POST'])
@@ -267,24 +268,25 @@ def editPost(PID):
 @login_required
 def shoppingCart():
     # uncoment upon registration completion
-    # cartItems = getItemsFromCart(current_user.UserId)
-    cartItems = list()
+    userCart = getItemsFromCart(current_user.UserId)
+    
 
     # calculate check out total cost
     checkOutSum = 0
-    for product in cartItems:
-        checkOutSum += product[5]
+    # cartItems = list()
+    for product in userCart.Products:
+        checkOutSum += product.Price
 
     # upon form completion
     if request.method == 'POST':
-        for product in cartItems:
+        for product in userCart.Products:
             product.isSold =True
             db.session.commit()
 
         flash('Check Out Success! Shipping information sent to email!', category='warning')
         return redirect(url_for('app.index')) 
 
-    return render_template('cart.html',user=current_user, productsDict = cartItems, checkOutSum=checkOutSum)
+    return render_template('cart.html',user=current_user, cartItems = userCart.Products, checkOutSum=checkOutSum)
 
 
 @app.route('/<int:id>/')
@@ -295,6 +297,7 @@ def get_img(id):
         return Response(img.img, mimetype=img.mimetype)
     else:
         return null
+
 
 # TODO:
 # //////////////////////
@@ -316,3 +319,31 @@ def accountSettings():
     # allows user to change user info
 
     return render_template('home.html', user=current_user)
+
+
+# @login_required
+# @app.route('/cart/', methods=['POST'])
+def addToCart(PID):
+    userCart = Cart.query.filter_by(UserId=current_user.UserId).first()
+    item = Product.query.filter_by(PID=PID).first()
+
+    # Item not found
+    if not item:
+        flash('Item Not Found', category="error") 
+    # Item already carted
+    elif item in userCart.Products:
+        flash('Item already in Cart', category="error")
+    else:
+        userCart.Products.append(item)
+        db.session.commit()
+        flash('Item added to Cart', category="success")
+        
+#     return redirect(url_for('app.index'))
+
+
+
+from shop import create_app
+myapp = create_app()
+
+if __name__ == '__main__':
+    myapp.run(debug=True)
