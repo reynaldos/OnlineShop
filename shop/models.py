@@ -26,14 +26,15 @@ class User(db.Model, UserMixin):
 
 
 cartIdentifier = db.Table('cartIdentifier',
-    db.Column('PID', db.Integer, db.ForeignKey('product.PID')),
-    db.Column('CID', db.Integer, db.ForeignKey('cart.CID'))
+    db.Column('PID', db.Integer, db.ForeignKey('product.PID'), primary_key = True),
+    db.Column('CID', db.Integer, db.ForeignKey('cart.CID'), primary_key = True)
 )
 
 
 class Cart(db.Model):
     CID = db.Column(db.Integer, primary_key=True) 
     UserId = db.Column(db.Integer, db.ForeignKey('user.UserId'))
+    Products = db.relationship('Product', secondary=cartIdentifier) # many-to-many relation
 
      # uses cid for getting ID
     def get_id(self):

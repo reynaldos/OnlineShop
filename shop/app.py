@@ -22,7 +22,6 @@ adminAccount ={
     'Email': 'admin@usf.edu'
 }
 
-
 app = Blueprint('app', __name__)
 
 @app.route('/', methods=['GET', 'POST'])
@@ -126,7 +125,14 @@ def registration():
             # to database
             db.session.add(newUser)
             db.session.commit()
+
             login_user(newUser, remember=True)
+
+            # gives new user a cart
+            userCart = Cart(UserId=current_user.UserId)
+            db.session.add(userCart)
+            db.session.commit()
+
             flash('Account created!', category='success')
 
             return redirect(url_for('app.index'))
