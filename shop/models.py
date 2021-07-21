@@ -32,7 +32,7 @@ cartIdentifier = db.Table('cartIdentifier',
 class Cart(db.Model):
     CID = db.Column(db.Integer, primary_key=True) 
     UserId = db.Column(db.Integer, db.ForeignKey('user.UserId'))
-    Products = db.relationship('Product', secondary=cartIdentifier) # many-to-many relation
+    Products = db.relationship('Product', secondary=cartIdentifier, overlaps="Products") # many-to-many relation
 
      # uses cid for getting ID
     def get_id(self):

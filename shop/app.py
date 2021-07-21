@@ -280,11 +280,11 @@ def shoppingCart():
     # upon form completion
     if request.method == 'POST':
         for product in userCart.Products:
-            userCart.remove(product)
+            userCart.Products.remove(product)
             product.isSold =True
             db.session.commit()
 
-        flash('Check Out Success! Shipping information sent to email!', category='success')
+        flash('Check out success! Shipping information sent to email!', category='success')
         return redirect(url_for('app.index')) 
 
     return render_template('cart.html',user=current_user, cartItems = userCart.Products, checkOutSum=checkOutSum)
@@ -328,15 +328,19 @@ def accountSettings():
 def addCartItem():
     # finds user cart
     userCart = Cart.query.filter_by(UserId=current_user.UserId).first()
+    
 
     # gets PID from request
     form = json.loads(request.data)
     foundPID = form['PID']
 
-    # gets product and removes from user cart
+    # gets product and adds user cart
     item  = Product.query.filter_by(PID=foundPID).first()
     if item:
-        if item in userCart.Products:
+        if not userCart:
+            flash('Log in to add item to cart!', category='warning')
+
+        elif item in userCart.Products:
             flash('Item already in cart!', category='warning')
 
         elif userCart.UserId == current_user.UserId:
