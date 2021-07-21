@@ -16,6 +16,13 @@ from . import db
 # user=current_user  -> links current user to each template
 # @login_required -> cant access page unless user logged in
 
+
+adminAccount ={
+    'UserID': 1,
+    'Email': 'admin@usf.edu'
+}
+
+
 app = Blueprint('app', __name__)
 
 @app.route('/', methods=['GET', 'POST'])
@@ -206,11 +213,11 @@ def itemPost():
 def editPost(PID):
     productFound = Product.query.filter_by(PID=PID).first()
 
-    if current_user.UserId != productFound.SellerID:
+    if current_user.UserId not in (productFound.SellerID, adminAccount['UserId']) :
         flash('Access Denied', category='warning')
         return redirect(url_for('app.index'))
 
-    if request.method == 'POST' and productFound.SellerID in (current_user.UserId, 1):
+    if request.method == 'POST':
         # product info from form
         pName = request.form.get('ProductName')
         pDesc = request.form.get('ProductDescription')
@@ -289,11 +296,11 @@ def get_img(id):
 @app.route('/admin')
 @login_required
 def admin():
-    if current_user.Email != 'admin@usf.edu' or current_user.UserId != 1:
+    if current_user.Email != adminAccount['Email'] or current_user.UserId != adminAccount['UserID']:
         flash('Access Denied.', category='error')
         return redirect(url_for('app.index')) 
         
-        
+
     return render_template('admin.html',user=current_user)
 
 
