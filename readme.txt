@@ -8,8 +8,7 @@ How To Run Application on macOS:
     - Command: 'export FLASK_ENV=development'
 
 3. Run Flask Application
-    - Command: 'python3 -m flask run'
-
+    - Command: 'python3 main.py'
 
 
 If changes to models are made:
