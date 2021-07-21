@@ -9,3 +9,8 @@ How To Run Application on macOS:
 
 1. Run Flask Application
     - Command: 'python3 main.py'
+
+
+Admin Account:
+username: admin@usf.edu
+password: 12345
