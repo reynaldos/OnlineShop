@@ -59,12 +59,24 @@
                     {%if url_for('app.get_img', id=product['PID']) == null%}
                     <div class="carousel-item active">
                         <img class="d-block w-100" src="{{url_for('static', filename='logo.png')}}" alt="logo">
-                        {%if user.UserId == product['SellerID'] or user.UserId==1 %}<button type="button" class="btn btn-secondary btn-sm button">Edit</button>{%endif%}
+                        {%if user.UserId == product['SellerID'] or user.UserId==1 %}
+                          {%if product['isSold'] == False%}
+                            <button type="button" class="btn btn-secondary btn-sm button">Edit</button>
+                            {%else%}
+                            <button type="button" class="btn btn-danger btn-sm button disabled">SOLD</button>
+                          {%endif%}
+                        {%endif%}
                         </div>
                     {%else%}
                     <div class="carousel-item active">
                         <img class="d-block w-100" src="{{url_for('app.get_img',id=product['PID']) }}">       
-                        {%if user.UserId == product['SellerID'] or user.UserId==1 %}<a role="button" class="btn btn-secondary btn-sm button" href="{{ url_for('app.editPost',PID=product['PID']) }}">Edit</a>{%endif%}
+                        {%if user.UserId == product['SellerID'] or user.UserId==1 %}
+                          {%if product['isSold'] == False%}
+                            <button type="button" class="btn btn-secondary btn-sm button">Edit</button>
+                            {%else%}
+                            <button type="button" class="btn btn-danger btn-sm button disabled">SOLD</button>
+                          {%endif%}
+                        {%endif%}
                     </div>
                     {%endif%}
                 </div>
@@ -88,9 +100,11 @@
                    <!-- product description -->
                 <p class="card-text">{{ product['Description'] }}</p>
                 <div class="d-flex justify-content-between align-items-center">
+                  {%if myitems == False%}
                   <div class="btn-group">
                     <button type="button" onClick="addCartItem({{ product['PID'] }})" class="btn btn-sm btn-outline-success">Add to Cart</button>
                   </div>
+                  {%endif%}
                    <!-- product time since posted -->
                   <small class="text-muted">{#now - product['DateAdded'] #}</small>
                 </div>
