@@ -221,6 +221,10 @@ def itemPost():
 def editPost(PID):
     productFound = Product.query.filter_by(PID=PID).first()
 
+    if not productFound:
+        flash('Error Occured when editting.', category='error')
+        return redirect(url_for('app.index')) 
+
     if current_user.UserId not in (productFound.SellerID, adminAccount['UserID']) :
         flash('Access Denied', category='warning')
         return redirect(url_for('app.index'))
@@ -262,7 +266,7 @@ def editPost(PID):
         else:
             flash("Error editing post.", category="error")
             
-    return render_template('editPost.html',user=current_user,productFound=productFound)
+    return render_template('editPost.html',user=current_user,productFound=productFound,PID=PID)
 
 @app.route('/myitems', methods=['GET', 'POST'])
 @app.route('/myitems/<string:sortby>/', methods=['GET', 'POST'])
@@ -332,30 +336,6 @@ def get_img(id):
     else:
         return null
 
-
-# TODO:
-# //////////////////////
-
-@app.route('/admin')
-@login_required
-def admin():
-    if current_user.Email != adminAccount['Email'] or current_user.UserId != adminAccount['UserID']:
-        flash('Access Denied.', category='error')
-        return redirect(url_for('app.index')) 
-        
-
-    return render_template('admin.html',user=current_user)
-
-
-@app.route('/accountSettings',methods=['GET','POST'])
-@login_required
-def accountSettings():
-    # allows user to change user info
-
-    return render_template('home.html', user=current_user)
-
-
-
 @app.route('/add-item', methods=['POST'])
 @login_required
 def addCartItem():
@@ -385,6 +365,7 @@ def addCartItem():
 
     return jsonify({})
 
+
 @app.route('/remove-item', methods=['POST'])
 @login_required
 def removeCartItem():
@@ -403,6 +384,56 @@ def removeCartItem():
             db.session.commit()
 
     return jsonify({})
+
+
+@app.route('/delete-item', methods=['POST'])
+@login_required
+def deleteProduct():
+    
+    # gets PID from request
+    form = json.loads(request.data)
+    foundPID = form['PID']
+
+    # gets product and removes from DB
+    item  = Product.query.get(foundPID)
+
+    print(item.PID)
+
+    if item:
+        img = Img.query.filter_by(ProductId=item.PID).first()
+
+        if current_user.UserId in (item.SellerID, adminAccount['UserID']):
+            db.session.delete(img)
+            db.session.delete(item)
+            db.session.commit()
+            flash('Item deleted.', category='warning')
+
+    return jsonify({})
+
+
+
+# TODO:
+# //////////////////////
+
+@app.route('/admin')
+@login_required
+def admin():
+    if current_user.Email != adminAccount['Email'] or current_user.UserId != adminAccount['UserID']:
+        flash('Access Denied.', category='error')
+        return redirect(url_for('app.index')) 
+        
+
+    return render_template('admin.html',user=current_user)
+
+
+@app.route('/accountSettings',methods=['GET','POST'])
+@login_required
+def accountSettings():
+    # allows user to change user info
+
+    return render_template('home.html', user=current_user)
+
+
 
 
 
