@@ -50,7 +50,8 @@
             <a class="navbar-sub nav-link" id="admin" href="{{ url_for('app.admin') }}">Admin</a>
             {% endif %}
             <!-- cart tab always viewed -->
-          <a class="navbar-sub nav-link" id="cart" href="{{ url_for('app.shoppingCart') }}">Cart</a>
+            <a class="navbar-sub nav-link" id="cart" href="{{ url_for('app.shoppingCart') }}">Cart</a>
+            <a class="navbar-sub nav-link" id="setting" href="{{ url_for('app.accountSettings') }}">Settings</a>
             <a class="navbar-sub nav-link" id="logout" href="{{ url_for('app.logOut') }}">Logout</a>
           {% else %}
           <!-- login/sign up tabs only shown if user not logged in-->
@@ -101,7 +102,7 @@
         <footer style="background-color: rgb(53, 58, 63);"class="text-muted py-5">
           <div class="row d-flex justify-content-center align-items-center">
             <a class="col-lg-12 d-flex justify-content-center align-items-center" href="#">Back to top</a>
-            <p class="col-lg-12 d-flex justify-content-center align-items-center">© 2021 RJW INC</p>
+            <p class="col-lg-12 d-flex justify-content-center align-items-center">© 2021 RJK INC</p>
           </div>
         </footer>
 

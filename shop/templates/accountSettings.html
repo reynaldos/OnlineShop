@@ -1,4 +1,4 @@
-{% extends "base.html" %} {% block title %}Registration{% endblock %} 
+{% extends "base.html" %} {% block title %}Account Settings{% endblock %} 
 {% block content%}
 
         <div class="limiter">
@@ -6,46 +6,46 @@
                 <div class="wrap-login100-signup">
                     <form method="POST" class="login100-form validate-form">
                         <span class="login100-form-title p-b-26">
-                            Registration Form
+                            Account Settings
                         </span>
                         <span class="login100-form-title p-b-48">
                             <img src="{{url_for('static', filename='logo.png')}}" alt="logo" width="90px">
                         </span>
                         <div class="wrap-input100 validate-input" data-validate="The First Name field is required">
-                            <input class="input100" type="text" name="first_name">
-                            <span class="focus-input100" data-placeholder="First Name"></span>
+                            <input class="input100" type="text" name="first_name" value="{{user.Fname}}">
+                            <!-- <span class="focus-input100" data-placeholder="First Name"></span> -->
                         </div>
                         <div class="wrap-input100 validate-input" data-validate="The middle initial field is not required">
-                            <input class="input100" type="text" name="middle_initial">
-                            <span class="focus-input100" data-placeholder="Middle Initial" ></span>
+                            <input class="input100" type="text" name="middle_initial" value="{{user.MiddleIn}}">
+                            <!-- <span class="focus-input100" data-placeholder="Middle Initial" ></span> -->
                         </div>
                         <div class="wrap-input100 validate-input" data-validate="The Last Name field is required">
-                            <input class="input100" type="text" name="last_name">
-                            <span class="focus-input100" data-placeholder="Last Name" ></span>
+                            <input class="input100" type="text" name="last_name" value="{{user.Lname}}">
+                            <!-- <span class="focus-input100" data-placeholder="Last Name" ></span> -->
                         </div>
                         <div class="wrap-input100 validate-input" data-validate="The address field is required">
-                            <input class="input100" type="text" name="address">
-                            <span class="focus-input100" data-placeholder="Address" ></span>
+                            <input class="input100" type="text" name="address" value="{{user.Address}}">
+                            <!-- <span class="focus-input100" data-placeholder="Address" ></span> -->
                         </div>
                         <div class="wrap-input100 validate-input" data-validate="The City field is required">
-                            <input class="input100" type="text" name="city">
-                            <span class="focus-input100" data-placeholder="City" ></span>
+                            <input class="input100" type="text" name="city" value="{{user.City}}">
+                            <!-- <span class="focus-input100" data-placeholder="City" ></span> -->
                         </div>
                         <div class="wrap-input100 validate-input" data-validate="The State field is required">
-                            <input class="input100" type="text" name="state">
-                            <span class="focus-input100" data-placeholder="State" ></span>
+                            <input class="input100" type="text" name="state" value="{{user.State}}">
+                            <!-- <span class="focus-input100" data-placeholder="State" ></span> -->
                         </div>
                         <div class="wrap-input100 validate-input" data-validate="The zipcode field is required">
-                            <input class="input100" type="text" name="zipcode">
-                            <span class="focus-input100" data-placeholder="Zip Code" ></span>
+                            <input class="input100" type="text" name="zipcode" value="{{user.ZipCode}}">
+                            <!-- <span class="focus-input100" data-placeholder="Zip Code" ></span> -->
                         </div>
                         <div class="wrap-input100 validate-input" data-validate="The Phone Number field is required">
-                            <input class="input100" type="text" name="phone_number">
-                            <span class="focus-input100" data-placeholder="Phone Number" ></span>
+                            <input class="input100" type="text" name="phone_number" value="{{user.PhoneNumber}}">
+                            <!-- <span class="focus-input100" data-placeholder="Phone Number" ></span> -->
                         </div>
                         <div class="wrap-input100 validate-input" data-validate = "Valid email is: a@b.c">
-                            <input class="input100" type="text" name="email">
-                            <span class="focus-input100" data-placeholder="Email"></span>
+                            <input class="input100" type="text" name="email" value="{{user.Email}}">
+                            <!-- <span class="focus-input100" data-placeholder="Email"></span> -->
                         </div>
                         <div class="wrap-input100 validate-input" data-validate="Enter password">
                             <span class="btn-show-pass">
@@ -66,7 +66,7 @@
                             <div class="wrap-login100-form-btn">
                                 <div class="login100-form-bgbtn"></div>
                                 <button class="login100-form-btn">
-                                    Sign up
+                                    Submit Changes
                                 </button>
                             </div>
                         </div>

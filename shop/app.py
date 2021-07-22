@@ -87,8 +87,7 @@ def login():
 @app.route('/registration',methods=['GET','POST'])
 def registration():
     if request.method == 'POST':
-        userType = request.form.get('type')
-        
+       
         fname = request.form.get('first_name')
         midIn = request.form.get('middle_initial')
         lname = request.form.get('last_name')
@@ -429,12 +428,44 @@ def admin():
 @app.route('/accountSettings',methods=['GET','POST'])
 @login_required
 def accountSettings():
-    # allows user to change user info
+    if request.method == 'POST':
+        fname = request.form.get('first_name')
+        midIn = request.form.get('middle_initial')
+        lname = request.form.get('last_name')
 
-    return render_template('home.html', user=current_user)
+        address = request.form.get('address')
+        city = request.form.get('city')
+        state = request.form.get('state')
+        zip = request.form.get('zipcode')
+
+        email = request.form.get('email')
+        phone = request.form.get('phone_number')
+        password = request.form.get('password')
+
+        user = User.query.filter_by(UserId=current_user.UserId).first()
+
+        if user:
+            user.Fname = fname,
+            user.MiddleIn = midIn,
+            user.Lname = lname,
+            user.Address = address,
+            user.City = city,
+            user.State = state,
+            user.ZipCode = zip,
+            user.Email = email,
+            user.PhoneNumber = phone,
+            # Password = generate_password_hash(password, method='sha256'))
+
+            # to database
+            db.session.commit()
+            flash('Account Updated!', category='success')
+            return redirect(url_for('app.index'))
+            
+    return render_template('accountSettings.html', user=current_user)
 
 
 
+   
 
 
 from shop import create_app
