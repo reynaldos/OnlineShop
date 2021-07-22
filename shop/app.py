@@ -454,7 +454,7 @@ def accountSettings():
             user.ZipCode = zip
             user.Email = email
             user.PhoneNumber = phone
-            user.Password = generate_password_hash(password, method='sha256'))
+            user.Password = generate_password_hash(password, method='sha256')
 
             # to database
             db.session.commit()
