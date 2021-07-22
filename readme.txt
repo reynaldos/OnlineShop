@@ -1,4 +1,13 @@
+USF COP4710 Summer 2021
+Reynaldo Sanchez
+Jaason Raudales
+Keval Solanki
 
+Online Shop E-Commerce Web Application
+
+Frontend: Bootstrap, Templated HTML
+Backend: Python, Flask
+Database MS: SQLite3
 
 How To Run Application on macOS:
 1. Activate Virtual Environment
@@ -19,3 +28,4 @@ Admin Account:
 Email: admin@usf.edu
 password: 12345
 UserId: 1
+
