@@ -417,18 +417,19 @@ def deleteProduct():
 @app.route('/admin')
 @login_required
 def admin():
-    rows = list()
-    rows = get_all_users()
+    # rows = list()
+    # rows = get_all_users()
 
-    product_list = list()
-    product_list = sortProductBy("", "SellerID", "ASC")
+    # product_list = list()
+    # product_list = sortProductBy("", "SellerID", "ASC")
 
     if current_user.Email != adminAccount['Email'] or current_user.UserId != adminAccount['UserID']:
         flash('Access Denied.', category='error')
         return redirect(url_for('app.index')) 
         
+    return render_template('admin.html',user=current_user,)
 
-    return render_template('admin.html',user=current_user, rows=rows, products=product_list)
+    # return render_template('admin.html',user=current_user, rows=rows, products=product_list)
 
 
 @app.route('/accountSettings',methods=['GET','POST'])
