@@ -448,6 +448,76 @@ iframe {
 /*------------------------------------------------------------------
 [ Alert validate ]*/
 
+/*CSS FOR ADMIN PAGE -----------------------------------------------*/
+
+.container-admin{
+    width: 1350px;
+    justify-items: center;
+    flex-wrap: wrap;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    position: relative;
+    align-items: left;
+    grid-gap: 20px;
+}
+.container-login100-admin {
+  min-height: 15vh;
+  display: grid;
+  flex-wrap: wrap;
+  justify-items: center;
+  justify-content: center;
+  padding: 15px;
+  background: #f2f2f2;
+}
+
+.wrap-login100-admin {
+  width: 670px;
+  height: 550px;
+  background: #fff;
+  border-radius: 10px;
+  padding: 33px 33px 33px 33px;
+  box-shadow: 0 5px 10px 0px rgb(0 0 0 / 10%);
+  -moz-box-shadow: 0 5px 10px 0px rgba(0, 0, 0, 0.1);
+  -webkit-box-shadow: 0 5px 10px 0px rgb(0 0 0 / 10%);
+  -o-box-shadow: 0 5px 10px 0px rgba(0, 0, 0, 0.1);
+  -ms-box-shadow: 0 5px 10px 0px rgba(0, 0, 0, 0.1);
+  overflow-y: scroll;
+}
+
+.content-table {
+  border-collapse: collapse;
+  margin: 25px 0;
+  font-size: 0.9em;
+  min-width: 400px;
+}
+
+.content-table thead tr {
+  font-weight: bold;
+  text-align: center;
+  position: absolute;
+  z-index: -1;
+  width: 300%;
+  height: 100%;
+  background: #a64bf4;
+  background: -webkit-linear-gradient(right, #21d4fd, #b721ff, #21d4fd, #b721ff);
+  background: -o-linear-gradient(right, #21d4fd, #b721ff, #21d4fd, #b721ff);
+  background: -moz-linear-gradient(right, #21d4fd, #b721ff, #21d4fd, #b721ff);
+  background: linear-gradient(right, #21d4fd, #b721ff, #21d4fd, #b721ff);
+  top: 0;
+  left: -100%;
+  -webkit-transition: all 0.4s;
+  -o-transition: all 0.4s;
+  -moz-transition: all 0.4s;
+  transition: all 0.4s;
+}
+
+.content-table th,
+.content-table td {
+  padding: 12px 15px;
+}
+
+/*CSS FOR ADMIN PAGE -----------------------------------------------*/
+
 .validate-input {
   position: relative;
 }
