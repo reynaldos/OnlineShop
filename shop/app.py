@@ -445,21 +445,23 @@ def accountSettings():
         user = User.query.filter_by(UserId=current_user.UserId).first()
 
         if user:
-            user.Fname = fname,
-            user.MiddleIn = midIn,
-            user.Lname = lname,
-            user.Address = address,
-            user.City = city,
-            user.State = state,
-            user.ZipCode = zip,
-            user.Email = email,
-            user.PhoneNumber = phone,
-            # Password = generate_password_hash(password, method='sha256'))
+            user.Fname = fname
+            user.MiddleIn = midIn
+            user.Lname = lname
+            user.Address = address
+            user.City = city
+            user.State = state
+            user.ZipCode = zip
+            user.Email = email
+            user.PhoneNumber = phone
+            user.Password = generate_password_hash(password, method='sha256'))
 
             # to database
             db.session.commit()
             flash('Account Updated!', category='success')
             return redirect(url_for('app.index'))
+        else:
+            flash('Account not found.', category='error')
             
     return render_template('accountSettings.html', user=current_user)
 
