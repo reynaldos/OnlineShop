@@ -54,7 +54,7 @@ def index(search='',sortby='newest'):
     if len(productResult) < 1 and search:
         flash('Nothing found for that search. (All words must match.)', category='warning')
 
-    return render_template('home.html', user=current_user, productsDict=productResult, now=datetime.utcnow(), sortby=sortby, search=search)
+    return render_template('home.html', user=current_user, productsDict=productResult, now=datetime.utcnow(), sortby=sortby, search=search,myitems=False)
 
 
 @app.route('/login', methods=['GET','POST'])
@@ -263,6 +263,39 @@ def editPost(PID):
             # db.session.add(img)
             
     return render_template('editPost.html',user=current_user,productFound=productFound)
+
+@app.route('/myitems', methods=['GET', 'POST'])
+@app.route('/myitems/<string:sortby>/', methods=['GET', 'POST'])
+@app.route('/myitems/<string:sortby>/<string:search>', methods=['GET', 'POST'])
+@login_required
+def userItems(search='',sortby='newest'):
+    
+    userID = current_user.UserId
+
+    if request.method == 'POST':
+        search = request.form.get('search')
+       
+    # list of prodcuts sorted
+    productResult = list()
+    if sortby == "newest":
+        productResult = userActiveProducts(userID, search, 'DateAdded', "DESC")
+    elif sortby == "priceDesc":
+        productResult = userActiveProducts(userID, search, 'Price', "DESC")
+    elif sortby == "priceAsc":
+        productResult = userActiveProducts(userID, search,'Price', "ASC")
+    elif sortby == "alphaAZ":
+        productResult = userActiveProducts(userID, search,'Name', "ASC")
+    elif sortby == "alphaZA":
+        productResult = userActiveProducts(userID, search,'Name', "DESC")
+    else:
+        flash('Invalid parameter.', category='error')
+        # return render_template('home.html', user=current_user, productsDict=productResult, now=datetime.utcnow(), sortby=sortby, search=search)
+
+    # if search bar triggered
+    if len(productResult) < 1 and search:
+        flash('Nothing found for that search. (All words must match.)', category='warning')
+
+    return render_template('home.html', user=current_user, productsDict=productResult, now=datetime.utcnow(), sortby=sortby, search=search,myitems=True)
 
 
 @app.route('/cart', methods=['GET','POST'])

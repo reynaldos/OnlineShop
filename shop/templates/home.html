@@ -1,4 +1,4 @@
-{% extends "base.html" %} {% block title %}Home{% endblock %} 
+{% extends "base.html" %} {% block title %} {%if myitems == False%}Home{%else%}My Items{%endif%}{% endblock %} 
 {% block content %}
     <!-- HTML Body content here -->
 
@@ -25,11 +25,11 @@
                   Sort By
                 </button>
                 <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                    <a class="dropdown-item {%if sortby=='newest'%} active {%endif%}" href="{{url_for('app.index', sortby='newest', search=search)}}">Newest Arrival</a>
-                    <a class="dropdown-item {%if sortby=='priceDesc'%} active {%endif%}" href="{{url_for('app.index', sortby='priceDesc', search=search)}}" >Price: High to low</a>
-                    <a class="dropdown-item {%if sortby=='priceAsc'%} active {%endif%}" href="{{url_for('app.index', sortby='priceAsc', search=search)}}">Price: Low to High</a>
-                    <a class="dropdown-item {%if sortby=='alphaAZ'%} active {%endif%}" href="{{url_for('app.index', sortby='alphaAZ', search=search)}}">Alphabetical: A-Z</a>
-                    <a class="dropdown-item {%if sortby=='alphaZA'%} active {%endif%}" href="{{url_for('app.index', sortby='alphaZA', search=search)}}">Alphabetical: Z-A</a>
+                    <a class="dropdown-item {%if sortby=='newest'%} active {%endif%}" {%if myitems == False%}href="{{url_for('app.index', sortby='newest', search=search)}}"{%else%}href="{{url_for('app.userItems', sortby='newest', search=search)}}"{%endif%}>Newest Arrival</a>
+                    <a class="dropdown-item {%if sortby=='priceDesc'%} active {%endif%}" {%if myitems == False%}href="{{url_for('app.index', sortby='priceDesc', search=search)}}"{%else%}href="{{url_for('app.userItems', sortby='priceDesc', search=search)}}"{%endif%}>Price: High to low</a>
+                    <a class="dropdown-item {%if sortby=='priceAsc'%} active {%endif%}" {%if myitems == False%}href="{{url_for('app.index', sortby='priceAsc', search=search)}}"{%else%}href="{{url_for('app.userItems', sortby='priceAsc', search=search)}}"{%endif%}>Price: Low to High</a>
+                    <a class="dropdown-item {%if sortby=='alphaAZ'%} active {%endif%}" {%if myitems == False%}href="{{url_for('app.index', sortby='alphaAZ', search=search)}}"{%else%}href="{{url_for('app.userItems', sortby='alphaAZ', search=search)}}"{%endif%}>Alphabetical: A-Z</a>
+                    <a class="dropdown-item {%if sortby=='alphaZA'%} active {%endif%}" {%if myitems == False%}href="{{url_for('app.index', sortby='alphaZA', search=search)}}"{%else%}href="{{url_for('app.userItems', sortby='alphaZA', search=search)}}"{%endif%}>Alphabetical: Z-A</a>
                 </div>
               </div>
         </div>

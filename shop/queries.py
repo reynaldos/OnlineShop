@@ -18,13 +18,11 @@ def getUserIds():
     return result
 
 
-def userActiveProducts(userId):
+def userActiveProducts(userid, search='', attribute = "Name", order="DESC"):
     """returns all products a user has posted"""
     with db.engine.connect() as connection:
-        productData = connection.execute(f"SELECT ProductsForSale FROM User WHERE UserId = {userId} ").fetchall()
-    productList = [dict(row) for row in productData]
-        # check output type
-    result = [product for product in productList if product['isSold'] == False]
+        data = connection.execute(text(f"SELECT * FROM (SELECT * FROM product WHERE Name LIKE '%{search}%' OR Description LIKE '%{search}%') WHERE SellerId = {userid} ORDER BY {attribute} {order}")).fetchall()   
+    result = [dict(row) for row in data]
     return result
 
 
