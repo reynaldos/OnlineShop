@@ -221,7 +221,7 @@ def itemPost():
 def editPost(PID):
     productFound = Product.query.filter_by(PID=PID).first()
 
-    if current_user.UserId not in (productFound.SellerID, adminAccount['UserId']) :
+    if current_user.UserId not in (productFound.SellerID, adminAccount['UserID']) :
         flash('Access Denied', category='warning')
         return redirect(url_for('app.index'))
 
@@ -233,34 +233,34 @@ def editPost(PID):
 
         # add img change functionality
         # image info from form
-        # pPic = request.files['uploadImg']
-        # filename = secure_filename(pPic.filename)
-        # mimetype = pPic.mimetype
-    
-        # if not pPic:
-        #   flash('Image required to submit item.', category='error')
-        # else:
-       
+        pPic = request.files['uploadImg']
+        filename = secure_filename(pPic.filename)
+        mimetype = pPic.mimetype
+        
+        # update item
         if productFound:
             productFound.Name = pName
             productFound.Description = pDesc
             productFound.Price = pPrice
             # update database
             db.session.commit()
+            
+            # check if pic added
+            if pPic:
+                img = Img(
+                    ProductId=productFound.PID,
+                    img=pPic.read(), 
+                    name=filename, 
+                    mimetype=mimetype)
+                
+                # update database
+                db.session.add(img)
+                db.session.commit()
+
             flash('Item Updated!', category='success')
             return redirect(url_for('app.index'))
         else:
             flash("Error editing post.", category="error")
-                
-            # dbNewProduct = Product.query.filter_by(Name=pName, SellerID=current_user.UserId).first()
-            # img = Img(
-            #     ProductId=dbNewProduct.PID,
-            #     img=pPic.read(), 
-            #     name=filename, 
-            #     mimetype=mimetype)
-            
-            # update database
-            # db.session.add(img)
             
     return render_template('editPost.html',user=current_user,productFound=productFound)
 
