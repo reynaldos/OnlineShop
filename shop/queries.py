@@ -17,6 +17,19 @@ def getUserIds():
     result = [dict(row) for row in data]
     return result
 
+def getSoldProducts():
+    """Returns all prodcuts sold"""
+    with db.engine.connect() as connection:
+        data = connection.execute(text("SELECT * FROM product WHERE isSold = True")).fetchall()
+    result = [dict(row) for row in data]
+    return result
+
+def getUserCartProducts(UserId):
+    """Returns products in cart of user"""
+    with db.engine.connect() as connection:
+        data = connection.execute(text("SELECT PID FROM cart JOIN user JOIN Product WHERE UserId = {UserId}")).fetchall()
+    result = [dict(row) for row in data]
+    return result
 
 def userActiveProducts(userid, search='', attribute = "Name", order="DESC"):
     """returns all products a user has posted"""
