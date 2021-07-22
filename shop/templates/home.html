@@ -109,7 +109,7 @@
                   </div>
                   {%endif%}
                    <!-- product time since posted -->
-                  <small class="text-muted">{#now - product['DateAdded'] #}</small>
+                  <small class="text-muted">{#now - product['DateAdded']|datetime('full') #}</small>
                 </div>
               </div>
             </div>
