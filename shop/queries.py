@@ -49,7 +49,7 @@ def getProductImgs(productID):
 
 def sortProductBy(search='', attribute = "Name", order="DESC"):
     """Returns active products sort"""
-    with db.engine.connect() as connection:
+    with db.        engine.connect() as connection:
         data = connection.execute(text(f"SELECT * FROM (SELECT * FROM product WHERE Name LIKE '%{search}%' OR Description LIKE '%{search}%') WHERE isSold = FALSE ORDER BY {attribute} {order}")).fetchall()   
     result = [dict(row) for row in data]
     return result
