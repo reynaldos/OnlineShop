@@ -69,3 +69,10 @@ def searchProduct(search):
         data = connection.execute(text(f"SELECT * FROM (SELECT * FROM PRODUCT WHERE Name LIKE '%{search}%' OR Description LIKE '%{search}%') WHERE isSold = FALSE")).fetchall()
     result = [dict(row) for row in data]
     return result
+
+def get_all_users():
+    """Returns all users and their respective products"""
+    with db.engine.connect() as connection:
+        data = connection.execute(text(f"SELECT * FROM User")).fetchall()
+    result = [dict(row) for row in data]
+    return result
